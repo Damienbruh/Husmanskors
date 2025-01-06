@@ -12,4 +12,8 @@
     <PackageReference Include="Npgsql" Version="9.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Database\DatabaseDump\" />
+  </ItemGroup>
+
 </Project>

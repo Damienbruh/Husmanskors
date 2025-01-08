@@ -57,9 +57,19 @@ class Program
 
         // methods for proccessing posts and gets
         
+        /*
+        app.MapPost("/set-name", async (HttpContext context) =>
+                {
+                    // Player here, is a class that defines the post requestBody format
+                    var requestBody = await context.Request.ReadFromJsonAsync<Player>();
+                    if (requestBody?.name is null)
+                    {
+                        return Results.BadRequest("name is required.");
+                    }
+                    Player player = await EditPlayer(requestBody.name, context.Request.Cookies["ClientId"]);
+                    return (player.Id > 0) ? Results.Ok(player) : Results.StatusCode(500);
+                }); */
         
-
-       
         
         
         
@@ -72,7 +82,7 @@ class Program
         
         
         
-        app.Run();
+        app.Run(); //startar servern 
         
         Console.WriteLine("Program will now exit, press any key to continue");
         Console.ReadKey();

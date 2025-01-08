@@ -96,6 +96,19 @@ class Program
         
         
         
+        app.MapPost("/addPlayer", async (HttpContext context) =>
+        {
+            // Player here, is a class that defines the post requestBody format
+            var requestBody = await context.Request.ReadFromJsonAsync<Users>();
+            if (requestBody?.name is null)
+            {
+                return Results.BadRequest("name is required.");
+            }
+            
+            Users user = await AddPlayer(requestBody.name, context.Request.Cookies["ClientId"]);
+            return (user.Id > 0) ? Results.Ok(user) : Results.StatusCode(500);
+        });
+        
         
         
         

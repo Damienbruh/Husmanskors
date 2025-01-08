@@ -10,6 +10,11 @@ class Program
 {
     static async Task Main()
     {   
+        Env.TraversePath().Load();//laddar in variabler från .env filen behöver en variabel exempel nedaför när vi har skapat vår db
+        // DBConnectString="Host=localhost;Port=5432;Username=postgres;Password=pass123;Database=dbname;SearchPath=public"        
+        DatabaseConnection database = new();
+        Actions actions = new(database.Connection());
+        
         var builder = WebApplication.CreateBuilder();
 
         var app = builder.Build();
@@ -56,8 +61,14 @@ class Program
 
         // methods for proccessing posts and gets
 
-        Actions actions = new();
         
+        /*
+         * todo
+         * behöver kunna hantera ifall en spelare är connected eller ej, ifall en spelare försöker öppna ny lobby medans i en lobby
+         * att en spelare disconnectar från en lobby
+         * ta bort ett game om alla disconnectar i lobby state, byta state till ended ifall alla lämnar medans state är active.
+         * tracka winner i db
+         */
         app.MapPost("/join-session", async (HttpContext context) => 
         {
             var requestBody = await context.Request.ReadFromJsonAsync<JoinSession>();
@@ -80,15 +91,13 @@ class Program
             {
                 return Results.BadRequest("not a valid connectType");
             }
-            return success ? Results.Ok(game) : Results.StatusCode(500);
+            return success ? Results.Ok(game._gameCode) : Results.StatusCode(500);
         });
         
         
         
         
-        Env.TraversePath().Load();//laddar in variabler från .env filen behöver en variabel exempel nedaför när vi har skapat vår db
-        // DBConnectString="Host=localhost;Port=5432;Username=postgres;Password=pass123;Database=dbname;SearchPath=public"        
-        DatabaseConnection database = new();
+        
         
         
         

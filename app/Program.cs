@@ -95,7 +95,7 @@ class Program
         });
         
         
-        
+        /*
         app.MapPost("/addPlayer", async (HttpContext context) =>
         {
             // Player here, is a class that defines the post requestBody format
@@ -108,7 +108,7 @@ class Program
             Users user = await AddPlayer(requestBody.name, context.Request.Cookies["ClientId"]);
             return (user.Id > 0) ? Results.Ok(user) : Results.StatusCode(500);
         });
-        
+        */
         
         
         

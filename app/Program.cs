@@ -72,6 +72,19 @@ class Program
         
         
         
+        app.MapPost("/addPlayer", async (HttpContext context) =>
+        {
+            // Player here, is a class that defines the post requestBody format
+            var requestBody = await context.Request.ReadFromJsonAsync<Users>();
+            if (requestBody?.name is null)
+            {
+                return Results.BadRequest("name is required.");
+            }
+            
+            Users user = await AddPlayer(requestBody.name, context.Request.Cookies["ClientId"]);
+            return (user.Id > 0) ? Results.Ok(user) : Results.StatusCode(500);
+        });
+        
         
         Env.TraversePath().Load();//laddar in variabler från .env filen behöver en variabel exempel nedaför när vi har skapat vår db
         // DBConnectString="Host=localhost;Port=5432;Username=postgres;Password=pass123;Database=dbname;SearchPath=public"

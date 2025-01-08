@@ -1,6 +1,6 @@
 ﻿namespace app;
 
-public class actions
+public class gameSession
 {
     
 }

@@ -57,6 +57,19 @@ class Program
 
         // methods for proccessing posts and gets
         
+        app.MapPost("/start-session", async (HttpContext context) => 
+        {
+            
+        });
+        
+        app.MapPost("/connect-session-code", async (HttpContext context) => 
+        {
+            
+        });
+                                                   
+                                                       
+                                                   
+        
         /*
         app.MapPost("/set-name", async (HttpContext context) =>
                 {

@@ -69,7 +69,7 @@ class Program
          * ta bort ett game om alla disconnectar i lobby state, byta state till ended ifall alla lämnar medans state är active.
          * tracka winner i db
          */
-        app.MapPost("/join-session", async (HttpContext context) => 
+        app.MapPost("/join-session", async (HttpContext context) =>  // hanterar join och create session
         {
             var requestBody = await context.Request.ReadFromJsonAsync<JoinSession>();
             Game game;
@@ -108,9 +108,6 @@ class Program
             Users user = await actions.AddPlayer(context.Request.Cookies["ClientId"], requestBody.name);
             return Results.Ok(user); // needs Results.StatusCode(500) if query for db fails
         });
-        
-        
-        
         
         
         

@@ -5,6 +5,7 @@ namespace app;
 
 public class Actions
 {
+
     private NpgsqlDataSource _db;
     public Actions(NpgsqlDataSource db)
     {
@@ -57,3 +58,4 @@ public class Actions
         return new Users(clientId, name);
     }
 }
+

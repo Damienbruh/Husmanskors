@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Timer?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(11, 40px);
+            grid-template-rows: repeat(11, 40px);
+            gap: 0;
+            border: 0px solid black;
+        }
+        .grid-item {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border:2px solid black;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+        .grid-item:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container" id="grid">
+        
+    </div>
+
+<script>
+    const createGrid = () => {
+        const gridContainer = document.getElementById('grid');
+        
+        for (let i = 0; i < 11 * 11; i++) {
+            const cell = document.createElement('input');
+            cell.type = 'text';
+            cell.maxLength = 1;
+            cell.className = 'grid-item'
+            cell.addEventListener('input', (e) => {
+                
+                e.target.value = e.target.value.toUpperCase();
+            });
+            gridContainer.appendChild(cell);
+        }
+    };
+    
+    
+    createGrid();
+</script>
+</body>
+</html>

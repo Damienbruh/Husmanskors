@@ -9,6 +9,7 @@ $('#SessionForm').on("click", "button", async function(event) {
     let response;
     switch(clickedButtonId){
         case "StartSession":
+            ChangeNameRequest();
             // Handle StartSession button click
             console.log("StartSession button clicked!");
 
@@ -20,8 +21,10 @@ $('#SessionForm').on("click", "button", async function(event) {
                     GameCode: gameCode
                 })
             });
+            
             break;
         case "ConnectSessionViaCode":
+            ChangeNameRequest();
             // Handle ConnectSessionCode button click
             console.log("ConnectSessionCode button clicked!");
             gameCode = $('#gamecode'.val());
@@ -35,19 +38,25 @@ $('#SessionForm').on("click", "button", async function(event) {
                     GameCode: gameCode
                 })
             });
+            ChangeNameRequest();
             break;
         case "ChangeName":
-            const name = $('#playerName').val();
-            console.log('playerName', name);
-            response = await fetch('/changeName', { // post (save new)
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: name })
-            });
-            console.log('response', response);
-            $('#message').text(thisPlayer.name + ' lades till i databasen')
+            ChangeNameRequest();
             break;
     }
+    
+    async function ChangeNameRequest(){
+        const name = $('#playerName').val();
+        console.log('playerName', name);
+        response = await fetch('/changeName', { // post (save new)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name })
+        });
+        console.log('response', response);
+        $('#message').text(thisPlayer.name + ' lades till i databasen')
+    }
+    
     console.log('response', response);
     const data = await response.json();
     console.log("data", data);

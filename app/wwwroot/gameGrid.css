@@ -7,6 +7,15 @@
     margin: 0;
     background-color: #f8f8f8;
 }
+
+.game-container {
+    text-align: center;
+}
+
+.timer {
+    text-align: center;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(11, 40px);
@@ -14,6 +23,7 @@
     gap: 0;
     border: 0px solid black;
 }
+
 .grid-item {
     width: 40px;
     height: 40px;
@@ -26,6 +36,7 @@
     cursor: pointer;
     outline: none;
 }
+
 .grid-item:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px #007bff;

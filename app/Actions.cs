@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Builder;
 using Npgsql;
-
+using app.Database;
 namespace app;
 
 public class Actions
 {
-
     private NpgsqlDataSource _db;
     public Actions(NpgsqlDataSource db)
     {
@@ -21,10 +20,7 @@ public class Actions
         Game game = null;
         int gameId;
         bool success = true; // todo ändra om query fails
-        await using var cmd = _db.CreateCommand("INSERT INTO users (user_id)" +
-                                                "VALUES ($1) ON CONFLICT (user_id) DO NOTHING"); // possible problems whit id collision
-        cmd.Parameters.AddWithValue(clientId);
-        await cmd.ExecuteNonQueryAsync();
+        
         
         await using var cmd2 = _db.CreateCommand("INSERT INTO games (player_1, state, gamecode)" +
                                                  "VALUES ($1, 'lobby', 'gamecode1') RETURNING game_id"); //todo  need to add random gamecode with check for conflict
@@ -39,42 +35,25 @@ public class Actions
         Game game = null;
         return game != null ? (true, game) : (false, null);
     }
-    
-    public async Task<Users> AddPlayer(string name, string clientId)
+    public async Task<Users?> AddPlayer(string clientId, string name)
     {
-        // check if player already exists
-        await using var cmd = _db.CreateCommand("SELECT * FROM users WHERE name = $1"); // check if player exists
-        cmd.Parameters.AddWithValue(name);
-        await using (var reader = await cmd.ExecuteReaderAsync())
+        int rows = 0;
+        if (!String.IsNullOrEmpty(name))
         {
-            while (await reader.ReadAsync())
-            {
-                var dbClientId = reader.GetString(1);
-                if (clientId.Equals(dbClientId) == false)
-                {
-                    // save new clientId to db
-                    await using var cmd2 = _db.CreateCommand("UPDATE users SET user_id = $1 WHERE id = $2");
-                    cmd2.Parameters.AddWithValue(clientId);
-                    cmd2.Parameters.AddWithValue(reader.GetInt32(2));
-                    await cmd2.ExecuteNonQueryAsync(); // Perform update
-                }
-                return new Users(reader.GetString(0), clientId, reader.GetInt32(2));
-            }
+            await using var cmd = _db.CreateCommand("INSERT INTO users (user_id, name)" +
+                                                    "VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET name = EXCLUDED.name"); // possible problems whit id collision
+            cmd.Parameters.AddWithValue(clientId);
+            cmd.Parameters.AddWithValue(name);
+            rows = await cmd.ExecuteNonQueryAsync();
         }
-        // if player did not exist we create them
-        await using var cmd3 = _db.CreateCommand("INSERT INTO users (name, user_id) VALUES ($1, $2) RETURNING id");
-        cmd3.Parameters.AddWithValue(name);
-        cmd3.Parameters.AddWithValue(clientId);
-        var result = await cmd3.ExecuteScalarAsync();
-        if (result != null && int.TryParse(result.ToString(), out int lastInsertedId))
+        
+        if (rows <= 0)
         {
-            return new Users(name, clientId, lastInsertedId);
+            await using var cmd2 = _db.CreateCommand("SELECT user_id FROM users WHERE user_id = $1");
+            cmd2.Parameters.AddWithValue(clientId);
+            return new Users(clientId, cmd2.ExecuteScalarAsync().ToString());
         }
-        else
-        {
-            Console.WriteLine("Failed to retrieve the last inserted ID.");
-            return null;
-        }
+
+        return new Users(clientId, name);
     }
 }
-

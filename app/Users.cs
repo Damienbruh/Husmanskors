@@ -1,3 +1,3 @@
 namespace app;
 
-public record Users(string name, string clientId, int Id);
+public record Users(string clientId, string name);

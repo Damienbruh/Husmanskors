@@ -39,6 +39,7 @@ class Program
                     SameSite = SameSiteMode.Strict,
                     MaxAge = TimeSpan.FromDays(365) // Cookie expiration
                 });
+                await actions.AddIdToDb(clientId);
                 Console.WriteLine($"New client ID generated and set: {clientId}");
             }
             else

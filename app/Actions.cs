@@ -80,5 +80,13 @@ public class Actions
 
         return new Users(clientId, name);
     }
+
+    public async Task AddIdToDb(string clientId)
+    {
+        await using var cmd = _db.CreateCommand("INSERT INTO users (user_id)" +
+                                                "VALUES ($1) ON CONFLICT (user_id) DO NOTHING");
+        cmd.Parameters.AddWithValue(clientId);
+        await cmd.ExecuteNonQueryAsync();
+    }
 }
 

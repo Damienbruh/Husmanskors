@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Builder;
 using Npgsql;
-
+using app.Database;
 namespace app;
 
 public class Actions
 {
-
     private NpgsqlDataSource _db;
     public Actions(NpgsqlDataSource db)
     {
@@ -39,7 +38,6 @@ public class Actions
         Game game = null;
         return game != null ? (true, game) : (false, null);
     }
-    
     public async Task<Users> AddPlayer(string name, string clientId)
     {
         // check if player already exists
@@ -77,4 +75,3 @@ public class Actions
         }
     }
 }
-

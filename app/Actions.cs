@@ -39,7 +39,5 @@ public class Actions
         Game game = null;
         return game != null ? (true, game) : (false, null);
     }
-    
-    
 }
 

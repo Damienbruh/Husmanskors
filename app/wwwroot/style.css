@@ -20,3 +20,48 @@ body {
 #volume-slider {
     width: 150px;
 }
+
+.dropdown-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+
+.dropdown-button {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    padding: 10px 15px;
+    font-size: 16px;
+}
+
+.dropdown-button:hover {
+    background-color: green;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown-container.show .dropdown-menu {
+    display: block; /* Show the dropdown when .show class is added */
+}

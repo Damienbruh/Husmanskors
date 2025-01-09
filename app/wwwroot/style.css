@@ -17,3 +17,6 @@ header>h1{
     color: white;
     font-family: Roboto
 }
+input[type="submit"]{
+    background-color: #7fefbd;
+}

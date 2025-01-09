@@ -95,10 +95,20 @@ public class Actions
             return false;
         }
 
-    
-    
-    
-    
-    
-}
+        // Task: Get the game status
+        public async Task<string> GetGameStatus(int gameId)
+        {
+            await using var cmd = _db.CreateCommand("SELECT state FROM games WHERE game_id = $1");
+            cmd.Parameters.AddWithValue(gameId);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                return reader.GetString(0);
+            }
+
+            return null;
+        }
+    }
+
 

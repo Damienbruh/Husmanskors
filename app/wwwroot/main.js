@@ -9,7 +9,7 @@ $('#SessionForm').on("click", "button", async function(event) {
     let response;
     switch(clickedButtonId){
         case "StartSession":
-            ChangeNameRequest();
+            await ChangeNameRequest();
             // Handle StartSession button click
             console.log("StartSession button clicked!");
 
@@ -38,7 +38,6 @@ $('#SessionForm').on("click", "button", async function(event) {
                     GameCode: gameCode
                 })
             });
-            await ChangeNameRequest();
             break;
         case "ChangeName":
             await ChangeNameRequest();

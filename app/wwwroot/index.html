@@ -8,17 +8,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-<header>
-    <h1>Welcome To HusmansKors</h1>
-</header>
-<main>
-    <div class="playername">
-        <form id="addPlayer">
-            <input type="text" id ="playerName" name="playerName" placeholder="Användarnamn">
-            <input type="submit" value="Skapa spel" href="">
-            <input type="submit" value="Gå med i spel" href="">
-        </form>
-    </div>
-</main>
+<div class="playername">
+
+
+    <!--joinGame-->
+    <form id="SessionForm">
+        <label for="playerName">AnvändarNamn</label>
+        <input type="text" id ="playerName" name="playerName" placeholder="Användarnamn">
+        <label for="gamecode">game code:</label>
+        <input type="text" id="gamecode" name="gamecode">
+        
+        <button type="button" id="ChangeName">ändra namn</button>
+        <button type="button" id="StartSession">Start a new session</button>
+        <button type="button" id="ConnectSessionViaCode">Connect to session via game code</button>
+    </form>
+    
+</div>
+
 </body>
 </html>

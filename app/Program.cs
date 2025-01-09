@@ -151,6 +151,5 @@ class Program
         app.Run(); //startar servern 
         
         Console.WriteLine("Program will now exit, press any key to continue");
-        Console.ReadKey();
     }
 }

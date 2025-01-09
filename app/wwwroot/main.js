@@ -9,7 +9,7 @@ $('#SessionForm').on("click", "button", async function(event) {
     let response;
     switch(clickedButtonId){
         case "StartSession":
-            ChangeNameRequest();
+            await ChangeNameRequest();
             // Handle StartSession button click
             console.log("StartSession button clicked!");
 
@@ -24,7 +24,7 @@ $('#SessionForm').on("click", "button", async function(event) {
             
             break;
         case "ConnectSessionViaCode":
-            ChangeNameRequest();
+            await ChangeNameRequest();
             // Handle ConnectSessionCode button click
             console.log("ConnectSessionCode button clicked!");
             gameCode = $('#gamecode'.val());
@@ -38,10 +38,9 @@ $('#SessionForm').on("click", "button", async function(event) {
                     GameCode: gameCode
                 })
             });
-            ChangeNameRequest();
             break;
         case "ChangeName":
-            ChangeNameRequest();
+            await ChangeNameRequest();
             break;
     }
     

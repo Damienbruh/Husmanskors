@@ -59,36 +59,38 @@ public class Actions
     }
     
     
-    
-    
- 
 
-        // Task: Be able to end the game
-        public async Task<bool> EndGame(int gameId)
+        // Task: Disconnect from the game
+        public async Task<bool> Disconnect(int gameId, string playerId)
         {
-            await using var cmd = _db.CreateCommand("SELECT state FROM games WHERE game_id = $1");
+            await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
             cmd.Parameters.AddWithValue(gameId);
             await using var reader = await cmd.ExecuteReaderAsync();
 
             if (await reader.ReadAsync())
             {
                 string state = reader.GetString(0);
+                string player1 = reader.GetString(1);
+                string player2 = reader.IsDBNull(2) ? null : reader.GetString(2);
 
-                if (state == "lobby")
+                if (player1 == playerId || player2 == playerId)
                 {
-                    // Ta bort spelet från databasen om det är i "lobby"-status
-                    await using var deleteCmd = _db.CreateCommand("DELETE FROM games WHERE game_id = $1");
-                    deleteCmd.Parameters.AddWithValue(gameId);
-                    int affectedRows = await deleteCmd.ExecuteNonQueryAsync();
-                    return affectedRows > 0;
-                }
-                else if (state == "active")
-                {
-                    // Uppdatera spelets status till "ended" om det är i "active"-status
-                    await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'ended' WHERE game_id = $1");
-                    updateCmd.Parameters.AddWithValue(gameId);
-                    int affectedRows = await updateCmd.ExecuteNonQueryAsync();
-                    return affectedRows > 0;
+                    if (state == "lobby")
+                    {
+                        // Ta bort spelet från databasen om det är i "lobby"-status
+                        await using var deleteCmd = _db.CreateCommand("DELETE FROM games WHERE game_id = $1");
+                        deleteCmd.Parameters.AddWithValue(gameId);
+                        int affectedRows = await deleteCmd.ExecuteNonQueryAsync();
+                        return affectedRows > 0;
+                    }
+                    else if (state == "active")
+                    {
+                        // Uppdatera spelets status till "ended" om det är i "active"-status
+                        await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'ended' WHERE game_id = $1");
+                        updateCmd.Parameters.AddWithValue(gameId);
+                        int affectedRows = await updateCmd.ExecuteNonQueryAsync();
+                        return affectedRows > 0;
+                    }
                 }
             }
 

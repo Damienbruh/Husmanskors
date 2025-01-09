@@ -111,12 +111,13 @@ class Program
         
         
         
+        
         app.MapGet("/game-status", async (HttpContext context) => 
         {
-            var gameIdStr = context.Request.Query["gameId"];
-            if (int.TryParse(gameIdStr, out int gameId))
+            var gameId = context.Request.Cookies["gameId"];
+            if (int.TryParse(gameId, out int gameIdInt))
             {
-                var state = await actions.GetGameStatus(gameId);
+                var state = await actions.GetGameStatus(gameIdInt);
                 return state != null ? Results.Ok(new { state }) : Results.StatusCode(500);
             }
             else
@@ -125,13 +126,14 @@ class Program
             }
         });
 
-        app.MapPost("/end-game", async (HttpContext context) => 
+        app.MapPost("/disconnect", async (HttpContext context) => 
         {
-            var gameIdStr = context.Request.Query["gameId"];
-            if (int.TryParse(gameIdStr, out int gameId))
+            var gameId = context.Request.Cookies["gameId"];
+            var playerId = context.Request.Cookies["ClientId"];
+            if (int.TryParse(gameId, out int gameIdInt))
             {
-                var success = await actions.EndGame(gameId);
-                return success ? Results.Ok("Spelet avslutades framgångsrikt.") : Results.StatusCode(500);
+                var success = await actions.Disconnect(gameIdInt, playerId);
+                return success ? Results.Ok("Du har kopplats från spelet.") : Results.StatusCode(500);
             }
             else
             {
@@ -139,6 +141,10 @@ class Program
             }
         });
 
+        
+        
+        
+        
         
         
         

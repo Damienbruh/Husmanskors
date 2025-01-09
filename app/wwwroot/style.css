@@ -4,17 +4,17 @@ body {
 }
 
 
-/* Stil för knappen "Avsluta spelet" */
-#endGame {
+/* Stil för knappen */
+#disconnect {
     margin: 10px;
     padding: 10px 20px;
-    background-color: #7FEFBD; /* Aquamarine-färg */
+    background-color: #FFCC00; /* Gul färg */
     border: none;
     color: #FFFFFF;
     cursor: pointer;
 }
 
 /* Stil för knappen vid hover */
-#endGame:hover {
-    background-color: #D64550; /* Rusty red-färg */
+#disconnect:hover {
+    background-color: #FF9900; /* Mörkare gul färg */
 }

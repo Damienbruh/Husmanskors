@@ -62,11 +62,10 @@ $('#SessionForm').on("click", "button", async function(event) {
     console.log("data", data);
 });
 
-
 $(document).ready(function() {
     // Funktion för att hämta spelets status från servern
-    async function getGameStatus(gameId) {
-        let response = await fetch(`/game-status?gameId=${gameId}`);
+    async function getGameStatus() {
+        let response = await fetch(`/game-status`);
         if (response.ok) {
             let data = await response.json();
             return data.state;
@@ -76,39 +75,40 @@ $(document).ready(function() {
         }
     }
 
-    // Kontrollera spelets status och visa knappen om spelet är i "lobby" eller "active" status
-    async function checkGameStatus() {
-        const gameId = prompt("Ange spelets ID:");
+    // Funktion för att initiera spelet och sätta spelets ID i en cookie
+    async function initGame() {
+        const gameId = getCookie("gameId"); // Hämta spelets ID från cookien
         if (!gameId) {
             console.log("Spelets ID är ogiltigt.");
             return;
         }
 
-        const gameState = await getGameStatus(gameId);
+        const gameState = await getGameStatus();
         if (gameState === "lobby" || gameState === "active") {
-            $('#endGame').show(); // Visa knappen om spelets status är "lobby" eller "active"
+            $('#disconnect').show(); // Visa knappen om spelets status är "lobby" eller "active"
         } else {
-            console.log("Spelet är inte i ett tillstånd där det kan avslutas.");
+            console.log("Spelet är inte i ett tillstånd där det kan kopplas från.");
         }
     }
 
-    // Kör kontrollen när sidan laddas
-    checkGameStatus();
+    // Funktion för att hämta en cookie
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
 
-    // Hantera klickhändelse för att avsluta spelet
-    $('#endGame').on('click', async function() {
-        const gameId = prompt("Bekräfta spelets ID för att avsluta:");
-        if (!gameId) {
-            console.log("Spelets ID är ogiltigt.");
-            return;
-        }
+    // Kör initiering när sidan laddas
+    initGame();
 
-        let response = await fetch(`/end-game?gameId=${gameId}`, { method: 'POST' });
+    // Hantera klickhändelse för att koppla från spelet
+    $('#disconnect').on('click', async function() {
+        let response = await fetch(`/disconnect`, { method: 'POST' });
         if (response.ok) {
-            console.log("Spelet avslutades framgångsrikt.");
-            $('#endGame').hide(); // Dölj knappen efter att spelet avslutats
+            console.log("Du har kopplats från spelet.");
+            $('#disconnect').hide(); // Dölj knappen efter att spelet har kopplats från
         } else {
-            console.log("Kunde inte avsluta spelet.");
+            console.log("Kunde inte koppla från spelet.");
         }
     });
 });

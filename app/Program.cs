@@ -111,6 +111,35 @@ class Program
         
         
         
+        app.MapGet("/game-status", async (HttpContext context) => 
+        {
+            var gameIdStr = context.Request.Query["gameId"];
+            if (int.TryParse(gameIdStr, out int gameId))
+            {
+                var state = await actions.GetGameStatus(gameId);
+                return state != null ? Results.Ok(new { state }) : Results.StatusCode(500);
+            }
+            else
+            {
+                return Results.BadRequest("Ogiltigt spel-ID.");
+            }
+        });
+
+        app.MapPost("/end-game", async (HttpContext context) => 
+        {
+            var gameIdStr = context.Request.Query["gameId"];
+            if (int.TryParse(gameIdStr, out int gameId))
+            {
+                var success = await actions.EndGame(gameId);
+                return success ? Results.Ok("Spelet avslutades framgångsrikt.") : Results.StatusCode(500);
+            }
+            else
+            {
+                return Results.BadRequest("Ogiltigt spel-ID.");
+            }
+        });
+
+        
         
         
         app.Run(); //startar servern 

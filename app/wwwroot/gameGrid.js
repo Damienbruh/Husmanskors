@@ -1,21 +1,38 @@
-﻿const createGrid = () => {
-    const gridContainer = document.getElementById('grid');
+﻿
+document.addEventListener('DOMContentLoaded', () => {
+    createGrid();
+    startTimer(180);
+});
+
+
+function createGrid() {
+    const gridContainer = document.getElementById('gameGrid');
+    if (!gridContainer) {
+        console.error('No grid container found');
+        return;
+    }
+
 
     for (let i = 0; i < 11 * 11; i++) {
         const cell = document.createElement('input');
         cell.type = 'text';
-        cell.maxLength = 1; // Allow only one character
+        cell.maxLength = 1; // Allow one character
         cell.className = 'grid-item';
         cell.addEventListener('input', (e) => {
-            e.target.value = e.target.value.toUpperCase(); // Convert to uppercase
+            e.target.value = e.target.value.toUpperCase();
         });
         gridContainer.appendChild(cell);
     }
-};
-createGrid();
 
-const startTimer = (duration) => {
+}
+
+function startTimer(duration) {
     const timerElement = document.getElementById('timer');
+    if (!timerElement) {
+        console.error("Timer element not found! Check your HTML structure and ID.");
+        return;
+    }
+
     let remainingTime = duration;
 
     const updateTimerDisplay = () => {
@@ -35,13 +52,8 @@ const startTimer = (duration) => {
         }
     }, 1000);
 
-    updateTimerDisplay(); 
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    
-    startTimer(180);
-});
+    updateTimerDisplay();
+}
 
 
 

@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Npgsql;
-using app.Database;
+﻿using Npgsql;
+using System.Security.Cryptography;
 namespace app;
 
 public class Actions
@@ -20,21 +19,45 @@ public class Actions
         
         Game game = null;
         int gameId;
-        bool success = true; // todo ändra om query fails
+
+        string gameCode;
+
+        do
+        {
+            using var rng = RandomNumberGenerator.Create();
+            var bytes = new byte[8];
+            rng.GetBytes(bytes);
+            gameCode = Convert.ToBase64String(bytes);
+        } while (await checkUniqueGameCode(gameCode));
+
+        async Task<bool> checkUniqueGameCode(string gCode)
+        {
+            await using var cmd = _db.CreateCommand("SELECT COUNT(*) FROM games WHERE gamecode = $1 AND state != 'ended'");
+            cmd.Parameters.AddWithValue(gCode);
+            var result = await cmd.ExecuteScalarAsync();
+            return (long)result > 0; // todo handle null
+        }
+        
+        
+        //todo check if clientId is in another game with state lobby and if so remove them from it, if they are player1 remove entry in db
         
         
         await using var cmd2 = _db.CreateCommand("INSERT INTO games (player_1, state, gamecode)" +
-                                                 "VALUES ($1, 'lobby', 'gamecode1') RETURNING game_id"); //todo  need to add random gamecode with check for conflict
+                                                 "VALUES ($1, 'lobby', $2) RETURNING game_id"); //todo  need to add random gamecode with check for conflict
         cmd2.Parameters.AddWithValue(clientId);
+        cmd2.Parameters.AddWithValue(gameCode);
         gameId = Convert.ToInt32(await cmd2.ExecuteScalarAsync());
+        if (gameId == 0) return (false, game);
         
-        game = new Game(gameId, clientId, null, "lobby", "gamecode1");
+        game = new Game(gameId, clientId, null, "lobby", gameCode);
         return (true, game);
     }
     public async Task<(bool, Game game)> JoinSessionViaCode(string clientId, string gameCode)
     {
-        Game game = null;
-        return game != null ? (true, game) : (false, null);
+        
+        //update games 
+        
+        return (false, null);
     }
     public async Task<Users?> AddPlayer(string clientId, string name)
     {
@@ -42,7 +65,7 @@ public class Actions
         if (!String.IsNullOrEmpty(name))
         {
             await using var cmd = _db.CreateCommand("INSERT INTO users (user_id, name)" +
-                                                    "VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET name = EXCLUDED.name"); // possible problems whit id collision
+                                                    "VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET name = EXCLUDED.name");
             cmd.Parameters.AddWithValue(clientId);
             cmd.Parameters.AddWithValue(name);
             rows = await cmd.ExecuteNonQueryAsync();

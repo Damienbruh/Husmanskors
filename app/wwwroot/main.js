@@ -61,3 +61,20 @@ $('#SessionForm').on("click", "button", async function(event) {
     const data = await response.json();
     console.log("data", data);
 });
+
+
+$(document).ready(function() {
+    // Funktion för att hämta spelets status från servern
+    async function getGameStatus(gameId) {
+        let response = await fetch(`/game-status?gameId=${gameId}`);
+        if (response.ok) {
+            let data = await response.json();
+            return data.state;
+        } else {
+            console.log("Kunde inte hämta spelets status.");
+            return null;
+        }
+    }    
+});
+
+

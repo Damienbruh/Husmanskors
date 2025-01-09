@@ -57,5 +57,48 @@ public class Actions
 
         return new Users(clientId, name);
     }
+    
+    
+    
+    
+ 
+
+        // Task: Be able to end the game
+        public async Task<bool> EndGame(int gameId)
+        {
+            await using var cmd = _db.CreateCommand("SELECT state FROM games WHERE game_id = $1");
+            cmd.Parameters.AddWithValue(gameId);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                string state = reader.GetString(0);
+
+                if (state == "lobby")
+                {
+                    // Ta bort spelet från databasen om det är i "lobby"-status
+                    await using var deleteCmd = _db.CreateCommand("DELETE FROM games WHERE game_id = $1");
+                    deleteCmd.Parameters.AddWithValue(gameId);
+                    int affectedRows = await deleteCmd.ExecuteNonQueryAsync();
+                    return affectedRows > 0;
+                }
+                else if (state == "active")
+                {
+                    // Uppdatera spelets status till "ended" om det är i "active"-status
+                    await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'ended' WHERE game_id = $1");
+                    updateCmd.Parameters.AddWithValue(gameId);
+                    int affectedRows = await updateCmd.ExecuteNonQueryAsync();
+                    return affectedRows > 0;
+                }
+            }
+
+            return false;
+        }
+
+    
+    
+    
+    
+    
 }
 

@@ -23,6 +23,7 @@ ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_pk;
 ALTER TABLE IF EXISTS ONLY public.swedish_dict DROP CONSTRAINT IF EXISTS swedish_dict_pk;
 ALTER TABLE IF EXISTS ONLY public.rounds DROP CONSTRAINT IF EXISTS rounds_pk;
 ALTER TABLE IF EXISTS ONLY public.games DROP CONSTRAINT IF EXISTS games_pk;
+ALTER TABLE IF EXISTS ONLY public.dictionary DROP CONSTRAINT IF EXISTS dictionary_pk;
 DROP TABLE IF EXISTS public.users;
 DROP TABLE IF EXISTS public.swedish_dict;
 DROP TABLE IF EXISTS public.rounds;
@@ -144887,7 +144888,15 @@ COPY public.users (user_id, name) FROM stdin;
 -- Name: games_game_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.games_game_id_seq', 1, false);
+SELECT pg_catalog.setval('public.games_game_id_seq', 12, true);
+
+
+--
+-- Name: dictionary dictionary_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dictionary
+    ADD CONSTRAINT dictionary_pk PRIMARY KEY (word);
 
 
 --

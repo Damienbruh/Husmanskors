@@ -2,35 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial scale 1.0">
-    <link rel="stylesheet" href="gameGrid.css">
-
-   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Game with Timer</title>
+    <link rel="stylesheet" href="gameGrid.css">  
 </head>
 <body>
-    <div class="grid-container" id="grid">
-        
+<div class="game-container">
+    <div class="timer" id="timer">Time Remaining: 03:00</div> 
+    <div class="grid-container" id="gameGrid">
+      
     </div>
+</div>
 
-<script>
-    const createGrid = () => {
-        const gridContainer = document.getElementById('grid');
-        
-        for (let i = 0; i < 11 * 11; i++) {
-            const cell = document.createElement('input');
-            cell.type = 'text';
-            cell.maxLength = 1;
-            cell.className = 'grid-item'
-            cell.addEventListener('input', (e) => {
-                
-                e.target.value = e.target.value.toUpperCase();
-            });
-            gridContainer.appendChild(cell);
-        }
-    };
-    
-    
-    createGrid();
-</script>
+<script src="gameGrid.js"></script> 
 </body>
 </html>

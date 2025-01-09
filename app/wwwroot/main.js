@@ -74,7 +74,25 @@ $(document).ready(function() {
             console.log("Kunde inte hämta spelets status.");
             return null;
         }
-    }    
+    }
+
+    // Kontrollera spelets status och visa knappen om spelet är i "lobby" eller "active" status
+    async function checkGameStatus() {
+        const gameId = prompt("Ange spelets ID:");
+        if (!gameId) {
+            console.log("Spelets ID är ogiltigt.");
+            return;
+        }
+
+        const gameState = await getGameStatus(gameId);
+        if (gameState === "lobby" || gameState === "active") {
+            $('#endGame').show(); // Visa knappen om spelets status är "lobby" eller "active"
+        } else {
+            console.log("Spelet är inte i ett tillstånd där det kan avslutas.");
+        }
+    }
+
+    // Kör kontrollen när sidan laddas
+    checkGameStatus();
+    
 });
-
-

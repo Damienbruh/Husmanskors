@@ -94,5 +94,21 @@ $(document).ready(function() {
 
     // Kör kontrollen när sidan laddas
     checkGameStatus();
-    
+
+    // Hantera klickhändelse för att avsluta spelet
+    $('#endGame').on('click', async function() {
+        const gameId = prompt("Bekräfta spelets ID för att avsluta:");
+        if (!gameId) {
+            console.log("Spelets ID är ogiltigt.");
+            return;
+        }
+
+        let response = await fetch(`/end-game?gameId=${gameId}`, { method: 'POST' });
+        if (response.ok) {
+            console.log("Spelet avslutades framgångsrikt.");
+            $('#endGame').hide(); // Dölj knappen efter att spelet avslutats
+        } else {
+            console.log("Kunde inte avsluta spelet.");
+        }
+    });
 });

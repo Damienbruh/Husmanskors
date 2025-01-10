@@ -6,21 +6,37 @@
     <link rel="stylesheet" href="styleCreateGameMenu.css">
 </head>
 <body>
+    <header>
+        <h1>Welcome to HusmansKors</h1>
+    </header>
+    
     <div class="section" id="settings">
         <h2>Inställningar</h2>
-        <label for="round-time">Rundtid (00:00:00):</label>
-        <input type="text" id="round-time" placeholder="00:00:00">
-
-        <label for="number-of-rounds">Antal rundor:</label>
-        <input type="number" id="number-of-rounds" min="1" value="1">
+        <div class="input-group">
+            <label for="round-time">Tid per Runda (00:00:00):</label>
+            <input type="text" id="round-time" placeholder="00:00:00">
+        </div>
+        <div class="input-group">
+            <label for="number-of-rounds">Antal rundor:</label>
+            <input type="number" id="number-of-rounds" min="1" value="1">
+        </div>
     </div>
+
+    <div class="divider"></div>
 
     <div class="section" id="modifiers">
         <h2>Modifierare</h2>
         <label>
-            <input type="checkbox" id="extra-points"> Extra poängs rutor
+            Extra poängs rutor <input type="checkbox" id="extra-points">
         </label>
     </div>
+
+    <div class="returnBtnDiv">
+        <a href ="/index.html">
+            <button type="button" id="returnBtn">Återgå till Huvudmenyn</button>
+        </a>
+    </div>
+    
     <script src="settings.js"></script>
 </body>
 </html>

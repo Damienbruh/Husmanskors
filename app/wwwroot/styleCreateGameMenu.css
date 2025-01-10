@@ -1,1 +1,49 @@
-﻿
+﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+body{
+    background-color: #f3efe0;
+    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin: 0;
+}
+header{
+    display: flex;
+    justify-content: center;
+    background-color: black;
+}
+
+.section {
+    margin: 30px 0;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+label {
+    margin-right: 10px;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+input[type="text"], input[type="number"] {
+    width: 150px;
+    padding: 5px;
+    margin-left: 10px;
+}
+.divider {
+    border-top: 1px solid gray;
+    margin: 20px 0;
+}
+.returnBtnDiv {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 100px;
+    padding: 10px 20px;
+}
+
+button {
+    background-color: #7fefbd;
+    border-radius: 10%;
+    padding: 10px 20px;
+    font-size: 10px;
+    cursor: pointer;
+}

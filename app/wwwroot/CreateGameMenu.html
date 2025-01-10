@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Game</title>
+    <link rel="stylesheet" href="styleCreateGameMenu.css">
+</head>
+<body>
+    <div class="section" id="settings">
+        <h2>Inställningar</h2>
+        <label for="round-time">Rundtid (00:00:00):</label>
+        <input type="text" id="round-time" placeholder="00:00:00">
+
+        <label for="number-of-rounds">Antal rundor:</label>
+        <input type="number" id="number-of-rounds" min="1" value="1">
+    </div>
+
+    <div class="section" id="modifiers">
+        <h2>Modifierare</h2>
+        <label>
+            <input type="checkbox" id="extra-points"> Extra poängs rutor
+        </label>
+    </div>
+    <script src="settings.js"></script>
+</body>
+</html>

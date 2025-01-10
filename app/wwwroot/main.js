@@ -8,6 +8,11 @@ $('#SessionForm').on("click", "button", async function(event) {
     var gameCode = null;
     let response;
     switch(clickedButtonId){
+        case "connectOptions":
+            await ChangeNameRequest();
+            console.log("CreateGameButton button clicked!");
+            break;
+        /*
         case "StartSession":
             await ChangeNameRequest();
             // Handle StartSession button click
@@ -22,7 +27,7 @@ $('#SessionForm').on("click", "button", async function(event) {
                 })
             });
             
-            break;
+            break;*/
         case "ConnectSessionViaCode":
             await ChangeNameRequest();
             // Handle ConnectSessionCode button click
@@ -109,5 +114,12 @@ $(document).ready(function() {
         } else {
             console.log("Kunde inte koppla från spelet.");
         }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('connectOptions').addEventListener('click', function() {
+        window.location.href = '/CreateGameMenu.html'; // Replace with your target URL
     });
 });

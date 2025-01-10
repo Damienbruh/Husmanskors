@@ -1,0 +1,39 @@
+.tile {
+    background-color: antiquewhite;
+    border: solid;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    cursor: pointer;
+}
+
+.letterUI {
+    margin-top: 39%;
+}
+
+.topRow{
+    display: grid;
+    grid-template-columns: 1fr repeat(15, 50px) 1fr;
+    column-gap: 15px;
+}
+
+.bottomRow{
+    display: grid;
+    grid-template-columns: 1fr repeat(14, 50px) 1fr;
+    column-gap: 15px;
+}
+
+h1{
+    text-align: center;
+    font-size: 40px;
+    margin: auto;
+    margin-top: 5px;
+    font-family: Inter;
+}
+h2{
+    position: absolute;
+    font-family: Inter;
+    font-size: 15px;
+    margin: auto;
+}

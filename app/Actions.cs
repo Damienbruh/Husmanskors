@@ -121,6 +121,37 @@ public class Actions
             return false;
         }
 
+        
+        
+            // Task: Forfeit a round
+            public async Task<bool> ForfeitRound(int gameId, string playerId)
+            {
+                await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
+                cmd.Parameters.AddWithValue(gameId);
+                await using var reader = await cmd.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    string state = reader.GetString(0);
+                    string player1 = reader.GetString(1);
+                    string player2 = reader.IsDBNull(2) ? null : reader.GetString(2);
+
+                    if (state == "active" && (player1 == playerId || player2 == playerId))
+                    {
+                        // Uppdatera spelets status för att ange att spelaren har gett upp rundan
+                        await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'forfeited' WHERE game_id = $1 AND (player_1 = $2 OR player_2 = $2)");
+                        updateCmd.Parameters.AddWithValue(gameId);
+                        updateCmd.Parameters.AddWithValue(playerId);
+                        int affectedRows = await updateCmd.ExecuteNonQueryAsync();
+                        return affectedRows > 0;
+                    }
+                }
+
+                return false;
+            }
+
+            
+        
         // Task: Get the game status
         public async Task<string> GetGameStatus(int gameId)
         {

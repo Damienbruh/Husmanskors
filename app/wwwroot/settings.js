@@ -7,9 +7,21 @@ const extraPointsCheckbox = document.getElementById('extra-points');
 //Just nu bara ger den logs i consolen för inputsen man gör i menyn
 //**TODO
 // *Lägga till funktionerna för knapparna så dem modifererars
+
+let roundTimeInput = 40;          // round-time
+let numberOfRoundsInput = 2;      // number-of-rounds
+let extraPointsCheckbox = false; // Boolean extra-points
+
+const defaultSettings = [
+    roundTimeInput,
+    numberOfRoundsInput,
+    extraPointsCheckbox
+];
+
 roundTimeInput.addEventListener('input', () => {
     console.log('Rundtid:', roundTimeInput.value);
     //** Koden går här för att modiferar default settingsarna
+    
 });
 
 numberOfRoundsInput.addEventListener('input', () => {

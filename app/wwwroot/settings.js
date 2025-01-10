@@ -1,7 +1,7 @@
 ﻿
-const roundTimeInput = document.getElementById('round-time');
-const numberOfRoundsInput = document.getElementById('number-of-rounds');
-const extraPointsCheckbox = document.getElementById('extra-points');
+const roundTimeInputE = document.getElementById('round-time');
+const numberOfRoundsInputE = document.getElementById('number-of-rounds');
+const extraPointsCheckboxE = document.getElementById('extra-points');
 
 
 //Just nu bara ger den logs i consolen för inputsen man gör i menyn
@@ -18,20 +18,25 @@ const defaultSettings = [
     extraPointsCheckbox
 ];
 
-roundTimeInput.addEventListener('input', () => {
-    console.log('Rundtid:', roundTimeInput.value);
+roundTimeInputE.addEventListener('input', function (event) {
     //** Koden går här för att modiferar default settingsarna
-    
+    roundTimeInput = parseInt(event.target.value)
+    defaultSettings[0] = roundTimeInput;
+    console.log('Rundtid:', defaultSettings);
 });
 
-numberOfRoundsInput.addEventListener('input', () => {
-    console.log('Antal rundor:', numberOfRoundsInput.value);
+numberOfRoundsInputE.addEventListener('input', function (event) {
     //** Koden går här för att modiferar default settingsarna
+    numberOfRoundsInput = parseInt(event.target.value)
+    defaultSettings[1] = numberOfRoundsInput
+    console.log('Antal Rundor:', defaultSettings)
 });
 
-extraPointsCheckbox.addEventListener('change', () => {
-    console.log('Extra poängs rutor:', extraPointsCheckbox.checked);
+extraPointsCheckboxE.addEventListener('change', function (event) {
     //** Koden går här för att modiferar default settingsarna
+    extraPointsCheckbox = event.target.checked
+    defaultSettings[2] = extraPointsCheckbox
+    console.log('Extra Poäng Rutor:', defaultSettings)
 });
 
 $('#SessionForm').on("click", "button", async function(event) {

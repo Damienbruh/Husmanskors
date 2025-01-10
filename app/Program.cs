@@ -141,8 +141,23 @@ class Program
             }
         });
 
-
         
+
+        app.MapPost("/forfeit-round", async (HttpContext context) => 
+        {
+            var gameIdStr = context.Request.Query["gameId"];
+            var playerId = context.Request.Cookies["ClientId"];
+            if (int.TryParse(gameIdStr, out int gameId))
+            {
+                var success = await actions.ForfeitRound(gameId, playerId);
+                return success ? Results.Ok("Rundan förlorades framgångsrikt.") : Results.StatusCode(500);
+            }
+            else
+            {
+                return Results.BadRequest("Ogiltigt spel-ID.");
+            }
+        });
+
         
         
         

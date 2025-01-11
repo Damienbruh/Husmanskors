@@ -72,3 +72,18 @@ input[type="text"] {
     padding: 10px;
     font-size: 12px;
 }
+
+/* Stil för knappen */
+#forfeitRound {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #FF6347; /* Tomatfärg */
+    border: none;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+/* Stil för knappen vid hover */
+#forfeitRound:hover {
+    background-color: #FF4500; /* OrangeRed-färg */
+}

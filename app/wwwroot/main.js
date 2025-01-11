@@ -12,7 +12,6 @@ $('#SessionForm').on("click", "button", async function(event) {
             await ChangeNameRequest();
             console.log("CreateGameButton button clicked!");
             break;
-        /*
         case "StartSession":
             await ChangeNameRequest();
             // Handle StartSession button click
@@ -27,7 +26,7 @@ $('#SessionForm').on("click", "button", async function(event) {
                 })
             });
             
-            break;*/
+            break;
         case "ConnectSessionViaCode":
             await ChangeNameRequest();
             // Handle ConnectSessionCode button click
@@ -67,9 +66,13 @@ $('#SessionForm').on("click", "button", async function(event) {
 });
 
 $(document).ready(function() {
+    // Variabler för att lagra spelets ID och spelarens ID
+    let gameId;
+    let playerId;
+
     // Funktion för att hämta spelets status från servern
     async function getGameStatus() {
-        let response = await fetch(`/game-status`);
+        let response = await fetch(`/game-status?gameId=${gameId}`);
         if (response.ok) {
             let data = await response.json();
             return data.state;
@@ -79,35 +82,50 @@ $(document).ready(function() {
         }
     }
 
-    // Funktion för att initiera spelet och sätta spelets ID i en cookie
+    // Funktion för att initiera spelet och sätta spelets ID och spelarens ID
     async function initGame() {
-        const gameId = getCookie("gameId"); // Hämta spelets ID från cookien
-        if (!gameId) {
-            console.log("Spelets ID är ogiltigt.");
+        // Få spelets ID och spelarens ID automatiskt (t.ex. från cookies)
+        gameId = getCookie("gameId");
+        playerId = getCookie("ClientId");
+        if (!gameId || !playerId) {
+            console.log("Spelets ID eller spelarens ID är ogiltigt.");
             return;
         }
 
         const gameState = await getGameStatus();
-        if (gameState === "lobby" || gameState === "active") {
+        if (gameState === "active") {
+            $('#forfeitRound').show(); // Visa knappen om spelets status är "active"
+        } else if (gameState === "lobby" || gameState === "active") {
             $('#disconnect').show(); // Visa knappen om spelets status är "lobby" eller "active"
         } else {
             console.log("Spelet är inte i ett tillstånd där det kan kopplas från.");
         }
     }
 
-    // Funktion för att hämta en cookie
+    // Funktion för att hämta cookie-värde
     function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
+        let value = "; " + document.cookie;
+        let parts = value.split("; " + name + "=");
+        if (parts.length === 2) return parts.pop().split(";").shift();
     }
 
     // Kör initiering när sidan laddas
     initGame();
 
+    // Hantera klickhändelse för att ge upp rundan
+    $('#forfeitRound').on('click', async function() {
+        let response = await fetch(`/forfeit-round?gameId=${gameId}`, { method: 'POST' });
+        if (response.ok) {
+            console.log("Rundan förlorades framgångsrikt.");
+            $('#forfeitRound').hide(); // Dölj knappen efter att rundan har förlorats
+        } else {
+            console.log("Kunde inte förlora rundan.");
+        }
+    });
+
     // Hantera klickhändelse för att koppla från spelet
     $('#disconnect').on('click', async function() {
-        let response = await fetch(`/disconnect`, { method: 'POST' });
+        let response = await fetch(`/disconnect?gameId=${gameId}`, { method: 'POST' });
         if (response.ok) {
             console.log("Du har kopplats från spelet.");
             $('#disconnect').hide(); // Dölj knappen efter att spelet har kopplats från
@@ -123,3 +141,4 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/CreateGameMenu.html'; // Replace with your target URL
     });
 });
+

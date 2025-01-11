@@ -29,7 +29,7 @@ function createGrid() {
 function startTimer(duration) {
     const timerElement = document.getElementById('timer');
     if (!timerElement) {
-        console.error("Timer element not found! Check your HTML structure and ID.");
+        console.error("Timer element not found!");
         return;
     }
 

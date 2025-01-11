@@ -36,11 +36,15 @@ input[type="text"], input[type="number"] {
     border-top: 1px solid gray;
     margin: 20px 0;
 }
-.returnBtnDiv {
+.buttonDiv{
     display: flex;
-    flex-wrap: wrap;
-    gap: 100px;
+    justify-content: space-evenly;
     padding: 10px 20px;
+}
+
+#returnBtn, #StartSession{
+    width: 150px;
+    heigtht: 50px;
 }
 
 button {

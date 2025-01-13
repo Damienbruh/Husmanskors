@@ -24,7 +24,7 @@ public class Actions
         do
         {
             using var rng = RandomNumberGenerator.Create();
-            var bytes = new byte[8];
+            var bytes = new byte[6];
             rng.GetBytes(bytes);
             gameCode = Convert.ToBase64String(bytes);
         } while (await checkUniqueGameCode(gameCode));

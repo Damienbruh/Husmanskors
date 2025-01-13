@@ -39,6 +39,7 @@ class Program
                     SameSite = SameSiteMode.Strict,
                     MaxAge = TimeSpan.FromDays(365) // Cookie expiration
                 });
+                context.Items[clientIdCookieName] = clientId;
                 await actions.AddIdToDb(clientId);
                 Console.WriteLine($"New client ID generated and set: {clientId}");
             }
@@ -57,7 +58,7 @@ class Program
             using var rng = RandomNumberGenerator.Create();
             var bytes = new byte[16];
             rng.GetBytes(bytes);
-            return Convert.ToBase64String(bytes);
+            return Convert.ToBase64String(bytes).TrimEnd('=');
         }
 
         // methods for proccessing posts and gets
@@ -106,7 +107,7 @@ class Program
                 return Results.BadRequest("name is required.");
             }
             
-            Users user = await actions.AddPlayer(context.Request.Cookies["ClientId"], requestBody.name);
+            Users user = await actions.AddPlayer(context.Request.Cookies["ClientId"] ?? context.Items["ClientId"]?.ToString(), requestBody.name);
             return Results.Ok(user); // needs Results.StatusCode(500) if query for db fails
         });
         

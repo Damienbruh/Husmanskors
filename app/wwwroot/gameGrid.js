@@ -1,9 +1,34 @@
 ﻿
-document.addEventListener('DOMContentLoaded', () => {
-    createGrid();
-    startTimer(180);
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    createGrid(); // Initialize the grid
+    document.getElementById("startGame").addEventListener("click", startGame); 
 });
 
+async function startGame() {
+    placeWordInCenter(testWord)
+    startTimer(180);
+}
+
+async function testWord(e) {
+
+    e.preventDefault(); // not reload page on form submit
+
+    const word = $('[name="word"]').val();
+
+    console.log('word', word);
+
+    const response = await fetch('/new-word' + word); // get (read)
+
+    console.log('response', response);
+
+    const data = await response.json();
+
+    console.log('data', data);
+
+    $('#message').text(word + (data ? ' finns ' : ' finns inte ') + ' i databasen')
+}
 
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
@@ -24,6 +49,28 @@ function createGrid() {
         gridContainer.appendChild(cell);
     }
 
+}
+
+function placeWordInCenter(word) {
+    const gridContainer = document.getElementById("gameGrid");
+    if (!gridContainer) {
+        console.error("Grid container not found!");
+        return;
+    }
+
+    const gridSize = 11; 
+    const startRow = Math.floor(gridSize / 2); 
+    const startCol = Math.floor((gridSize - word.length) / 2); 
+
+    // Get all grid cells
+    const gridItems = gridContainer.querySelectorAll(".grid-item");
+
+    // Place the word horizontally starting from the center
+    for (let i = 0; i < word.length; i++) {
+        const cellIndex = startRow * gridSize + (startCol + i);
+        gridItems[cellIndex].value = word[i]; 
+        gridItems[cellIndex].disabled = true; 
+    }
 }
 
 function startTimer(duration) {

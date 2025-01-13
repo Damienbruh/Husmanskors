@@ -74,9 +74,9 @@ $(document).ready(function() {
 
     // Funktion för att hämta spelets status från servern
     async function getGameStatus() {
-        let response = await fetch(`/game-status?gameId=${gameId}`);
+        const response = await fetch(`/game-status?gameId=${gameId}`);
         if (response.ok) {
-            let data = await response.json();
+            const data = await response.json();
             return data.state;
         } else {
             console.log("Kunde inte hämta spelets status.");
@@ -97,8 +97,9 @@ $(document).ready(function() {
         const gameState = await getGameStatus();
         if (gameState === "active") {
             $('#forfeitRound').show(); // Visa knappen om spelets status är "active"
+            $('#endTurn').show(); // Visa knappen om spelets status är "active"
         } else if (gameState === "lobby" || gameState === "active") {
-            $('#disconnect').show(); // Visa knappen om spelets status är "lobby" eller "active"
+            $('#disconnectGame').show(); // Visa knappen om spelets status är "lobby" eller "active"
         } else {
             console.log("Spelet är inte i ett tillstånd där det kan kopplas från.");
         }
@@ -114,28 +115,61 @@ $(document).ready(function() {
     // Kör initiering när sidan laddas
     initGame();
 
-    // Hantera klickhändelse för att ge upp rundan
-    $('#forfeitRound').on('click', async function() {
-        let response = await fetch(`/forfeit-round?gameId=${gameId}`, { method: 'POST' });
+    // Hantera klickhändelse för att koppla från spelet (Task: Disconnect game)
+    $('#disconnectGame').on('click', async function() {
+        const response = await fetch('/disconnect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gameId: gameId, playerId: playerId })
+        });
+        const messageElement = $('#message');
+
         if (response.ok) {
-            console.log("Rundan förlorades framgångsrikt.");
-            $('#forfeitRound').hide(); // Dölj knappen efter att rundan har förlorats
+            const data = await response.json();
+            messageElement.text("Du har kopplats från spelet.");
+            $('#disconnectGame').hide(); // Dölj knappen efter att spelet har kopplats från
         } else {
-            console.log("Kunde inte förlora rundan.");
+            messageElement.text("Kunde inte koppla från spelet.");
         }
     });
 
-    // Hantera klickhändelse för att koppla från spelet
-    $('#disconnect').on('click', async function() {
-        let response = await fetch(`/disconnect?gameId=${gameId}`, { method: 'POST' });
+    // Hantera klickhändelse för att ge upp rundan (Task: Forfeit a round)
+    $('#forfeitRound').on('click', async function() {
+        const response = await fetch('/forfeit-round', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gameId: gameId, playerId: playerId })
+        });
+        const messageElement = $('#message');
+
         if (response.ok) {
-            console.log("Du har kopplats från spelet.");
-            $('#disconnect').hide(); // Dölj knappen efter att spelet har kopplats från
+            const data = await response.json();
+            messageElement.text("Rundan förlorades framgångsrikt.");
+            $('#forfeitRound').hide(); // Dölj knappen efter att rundan har förlorats
         } else {
-            console.log("Kunde inte koppla från spelet.");
+            messageElement.text("Kunde inte förlora rundan.");
+        }
+    });
+
+    // Hantera klickhändelse för att avsluta turen (Task: End turn early)
+    $('#endTurn').on('click', async function() {
+        const response = await fetch('/end-turn', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gameId: gameId, playerId: playerId })
+        });
+        const messageElement = $('#message');
+
+        if (response.ok) {
+            const data = await response.json();
+            messageElement.text("Din tur har avslutats.");
+            $('#endTurn').hide(); // Dölj knappen efter att turen har avslutats
+        } else {
+            messageElement.text("Kunde inte avsluta turen.");
         }
     });
 });
+
 
 
 document.addEventListener('DOMContentLoaded', function() {

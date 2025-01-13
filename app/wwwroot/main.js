@@ -1,57 +1,3 @@
-let players = [];
-let thisPlayer = {}; // store User object that is returned from http request
-
-$('#SessionForm').on("click", "button", async function(event) {
-    event.preventDefault(); // Prevent default behavior, like form submission
-    const clickedButtonId = $(this).attr('id'); // Get the ID of the clicked button
-    console.log(clickedButtonId);
-    var gameCode = null;
-    let response;
-    switch(clickedButtonId){
-        case "connectOptions":
-            await ChangeNameRequest();
-            console.log("CreateGameButton button clicked!");
-            break;
-        case "ConnectSessionViaCode":
-            await ChangeNameRequest();
-            // Handle ConnectSessionCode button click
-            console.log("ConnectSessionCode button clicked!");
-            gameCode = $('#gamecode').val();
-            console.log(gameCode);
-            console.log(gameCode);
-
-            response = await fetch('/join-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    connectType: clickedButtonId,
-                    GameCode: gameCode
-                })
-            });
-            break;
-        case "ChangeName":
-            await ChangeNameRequest();
-            break;
-    }
-    
-    async function ChangeNameRequest(){
-        const name = $('#playerName').val();
-        console.log('playerName', name);
-        response = await fetch('/changeName', { // post (save new)
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name })
-        });
-        console.log('response', response);
-        $('#message').text(thisPlayer.name + ' lades till i databasen')
-    }
-    
-    console.log('response', response);
-    console.log('header type:  ', response.headers.get('Content-Type'));
-    const data = await response.json();
-    console.log("data", data);
-});
-
 $(document).ready(function() {
     // Variabler för att lagra spelets ID och spelarens ID
     let gameId;
@@ -80,13 +26,18 @@ $(document).ready(function() {
         }
 
         const gameState = await getGameStatus();
+        if (gameState === "active" || gameState === "lobby") {
+            $('#disconnectGame').show(); // Visa knappen om spelets status är "active" eller "lobby"
+        } else {
+            $('#disconnectGame').hide(); // Dölj knappen om spelets status inte är "active" eller "lobby"
+        }
+
         if (gameState === "active") {
             $('#forfeitRound').show(); // Visa knappen om spelets status är "active"
             $('#endTurn').show(); // Visa knappen om spelets status är "active"
-        } else if (gameState === "lobby" || gameState === "active") {
-            $('#disconnectGame').show(); // Visa knappen om spelets status är "lobby" eller "active"
         } else {
-            console.log("Spelet är inte i ett tillstånd där det kan kopplas från.");
+            $('#forfeitRound').hide(); // Dölj knappen om spelets status inte är "active"
+            $('#endTurn').hide(); // Dölj knappen om spelets status inte är "active"
         }
     }
 
@@ -154,12 +105,3 @@ $(document).ready(function() {
         }
     });
 });
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('connectOptions').addEventListener('click', function() {
-        window.location.href = '/CreateGameMenu.html'; // Replace with your target URL
-    });
-});
-

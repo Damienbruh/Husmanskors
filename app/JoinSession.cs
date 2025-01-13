@@ -3,7 +3,7 @@
 public record JoinSession(
     string connectType,
     string? GameCode,
-    DefaultSettings settings
+    DefaultSettings Settings
 );
     
 public record DefaultSettings(

@@ -74,12 +74,20 @@ class Program
         app.MapPost("/join-session", async (HttpContext context) =>  // hanterar join och create session
         {
             var requestBody = await context.Request.ReadFromJsonAsync<JoinSession>();
-            Game game;
-            bool success;
             if(requestBody?.connectType is null)
             {
                 return Results.BadRequest("not a valid request.");
             } 
+            
+            Console.WriteLine($"ConnectType: {requestBody.connectType}");
+            Console.WriteLine($"Game Code: {requestBody.GameCode}");
+            Console.WriteLine($"Round Time:: {requestBody.Settings.roundTimeInput} secods.");
+            Console.WriteLine($"Number of Rounds: {requestBody.Settings.numberOfRoundsInput}");
+            Console.WriteLine($"Extra Points: {requestBody.Settings.extraPointsCheckbox}");
+            
+            Game game;
+            bool success;
+            
             
             if (requestBody.connectType == "StartSession")
             {

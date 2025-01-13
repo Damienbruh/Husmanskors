@@ -55,13 +55,22 @@ $('#SessionForm').on("click", "button", async function(event) {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     connectType: clickedButtonId,
-                    GameCode: gameCode
+                    GameCode: gameCode,
+                    Settings: defaultSettings
                 })
             });
             break;
+        default:
+            console.log("Button does not exist")
+            return;
         }
-
-    console.log('response', response);
-    const data = await response.json();
+        
+        if(response.ok) {
+            console.log('response', response);
+            const data = await response.json();
+        }
+        else{
+            console.error("Error: ", response.status, await response.text());
+        }
     console.log("data", data);
 });

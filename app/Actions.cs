@@ -1,5 +1,9 @@
-﻿using Npgsql;
+﻿using System.Globalization;
+using System.Reflection.Metadata;
+using Npgsql;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+
 namespace app;
 
 public class Actions
@@ -12,11 +16,6 @@ public class Actions
     }
     public async Task<(bool, Game? game)> NewSession(string clientId)
     {
-        if (String.IsNullOrEmpty(clientId))
-        {
-            return (false, null);
-        }
-        
         Game game = null;
         int gameId;
 
@@ -52,11 +51,37 @@ public class Actions
         game = new Game(gameId, clientId, null, "lobby", gameCode);
         return (true, game);
     }
-    public async Task<(bool, Game game)> JoinSessionViaCode(string clientId, string gameCode)
+    public async Task<(bool, Game? game)> JoinSessionViaCode(string clientId, string gameCode)
     {
+        if (String.IsNullOrEmpty(gameCode))
+        {
+            return (false, null);
+        }
+
+        Game game = null;
+
+        await using var cmd = _db.CreateCommand("UPDATE games SET player_2 = NULL WHERE player_2 = $1 AND state = 'lobby'");
+        cmd.Parameters.AddWithValue(clientId);
+        await cmd.ExecuteNonQueryAsync();
         
-        //update games 
         
+        await using var cmd2 = _db.CreateCommand("UPDATE games SET player_2 = $1 WHERE player_2 IS NULL " + 
+                                                 "AND gamecode = $2 AND state = 'lobby' RETURNING game_id, player_1");
+        cmd2.Parameters.AddWithValue(clientId);
+        cmd2.Parameters.AddWithValue(gameCode);
+        await using (var reader = await cmd2.ExecuteReaderAsync())
+        {
+            List<(int id, string cId)> results = new List<(int id, string cId)>();
+            while (await reader.ReadAsync())
+            {
+                results.Add((reader.GetInt32(0), reader.GetString(1)));
+            }
+
+            if (results.Count == 1)
+            {
+                return (true, new Game(results[0].id, results[0].cId, clientId, "lobby", gameCode));
+            }
+        }
         return (false, null);
     }
     public async Task<Users?> AddPlayer(string clientId, string name)

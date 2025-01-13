@@ -92,7 +92,7 @@ class Program
             {
                 return Results.BadRequest("not a valid connectType");
             }
-            return success ? Results.Ok(game._gameCode) : Results.StatusCode(500);
+            return success ? Results.Ok(game) : Results.StatusCode(500);
         });
         
         

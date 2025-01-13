@@ -27,7 +27,8 @@ $('#SessionForm').on("click", "button", async function(event) {
             await ChangeNameRequest();
             // Handle ConnectSessionCode button click
             console.log("ConnectSessionCode button clicked!");
-            gameCode = $('#gamecode'.val());
+            gameCode = $('#gamecode').val();
+            console.log(gameCode);
             console.log(gameCode);
 
             response = await fetch('/join-session', {
@@ -57,6 +58,7 @@ $('#SessionForm').on("click", "button", async function(event) {
     }
     
     console.log('response', response);
+    console.log('header type:  ', response.headers.get('Content-Type'));
     const data = await response.json();
     console.log("data", data);
 });

@@ -162,7 +162,30 @@ class Program
 
         
         
-        
+        {
+
+            app.MapPost("/new-word", async (HttpContext context) =>
+
+            {
+
+
+                var requestBody = await context.Request.ReadFromJsonAsync<WordRequest>();
+
+                if (requestBody?.Word is null)
+
+                {
+
+                    return Results.BadRequest("Word is required.");
+
+                }
+
+                bool success = await actions.GetWord(word: requestBody.Word);
+
+                return success ? Results.Ok("Word added successfully.") : Results.StatusCode(500);
+                
+            });
+
+        }
         
         
         

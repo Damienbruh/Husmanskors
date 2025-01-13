@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Reflection.Metadata;
-using Npgsql;
+﻿using Npgsql;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 
@@ -195,5 +193,22 @@ public class Actions
 
         return null;
     }
-}
+
+        
+        public async Task<bool> GetWord(string word)
+
+        {
+
+            await using var cmd = _db.CreateCommand("SELECT EXISTS (SELECT 1 FROM words WHERE word = $1)"); // fast if word exists in table query 
+
+            cmd.Parameters.AddWithValue(word);
+
+            bool result = (bool)(await cmd.ExecuteScalarAsync() ?? false); // Execute fast if word exists in table query 
+
+            return result;
+
+        }
+    }
+
+
 

@@ -195,18 +195,17 @@ public class Actions
     }
 
         
-        public async Task<bool> GetWord(string word)
+        public async Task<string> GetWord(int length)
 
         {
 
-            await using var cmd = _db.CreateCommand("SELECT EXISTS (SELECT 1 FROM words WHERE word = $1)"); // fast if word exists in table query 
+            await using var cmd = _db.CreateCommand("SELECT word FROM dictionary WHERE LENGTH(word) = $1 ORDER BY RANDOM() LIMIT 1"); // fast if word exists in table query 
 
-            cmd.Parameters.AddWithValue(word);
+            cmd.Parameters.AddWithValue(length);
 
-            bool result = (bool)(await cmd.ExecuteScalarAsync() ?? false); // Execute fast if word exists in table query 
+            var result = await cmd.ExecuteScalarAsync(); // Execute fast if word exists in table query 
 
-            return result;
-
+            return result?.ToString() ?? "";
         }
     }
 

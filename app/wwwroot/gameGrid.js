@@ -1,10 +1,33 @@
 ﻿
-document.addEventListener('DOMContentLoaded', () => {
-    createGrid();
-    startTimer(180);
+let wordlength = 11; //default length of word change later!!
+
+document.addEventListener("DOMContentLoaded", () => {
+    createGrid(); // Initialize the grid
+    document.getElementById("startGame").addEventListener("click", (event) => {
+        startGame(event);
+    }); 
 });
 
+async function startGame(e) {
+    await placeWordInCenter(await testWord(e))
+    startTimer(180);
+}
 
+async function testWord(e, length = wordlength) { 
+
+    e.preventDefault(); // not reload page on form submit
+    const response = await fetch(`/new-word?length=${length.toString()}`); // get (read)
+
+    console.log('response', response);
+
+    const startWord = await response.text();
+
+    console.log('startWord: ', startWord);
+    return startWord;
+}
+
+
+//todo param width and height to dynamically change based on game settings
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
@@ -25,6 +48,27 @@ function createGrid() {
     }
 
 }
+
+
+function placeWordInCenter(word) {
+    const gridContainer = document.getElementById("gameGrid");
+    if (!gridContainer) {
+        console.error("Grid container not found!");
+        return;
+    }
+
+    const gridHeight = 11;  //handle dynamically
+    const gridWidth = 11; //handle dynamically
+    const startRow = Math.floor(gridHeight / 2); 
+    
+    const gridCells = $('#gameGrid .grid-item');
+    console.log(gridCells);
+    const startIndex = startRow * gridWidth;
+    for(let i = 0; i < word.length; i++){
+        $('#gameGrid  .grid-item').eq(startIndex + i).val(word[i]);
+    }
+}
+
 
 function startTimer(duration) {
     const timerElement = document.getElementById('timer');

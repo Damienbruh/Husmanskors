@@ -12,21 +12,6 @@ $('#SessionForm').on("click", "button", async function(event) {
             await ChangeNameRequest();
             console.log("CreateGameButton button clicked!");
             break;
-        case "StartSession":
-            await ChangeNameRequest();
-            // Handle StartSession button click
-            console.log("StartSession button clicked!");
-
-            response = await fetch('/join-session', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    connectType: clickedButtonId,
-                    GameCode: gameCode
-                })
-            });
-            
-            break;
         case "ConnectSessionViaCode":
             await ChangeNameRequest();
             // Handle ConnectSessionCode button click

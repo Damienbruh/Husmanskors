@@ -24,7 +24,7 @@ public class Actions
         do
         {
             using var rng = RandomNumberGenerator.Create();
-            var bytes = new byte[8];
+            var bytes = new byte[6];
             rng.GetBytes(bytes);
             gameCode = Convert.ToBase64String(bytes);
         } while (await checkUniqueGameCode(gameCode));
@@ -207,5 +207,22 @@ public class Actions
 
             return false;
         }
+    
+
+        
+        public async Task<string> GetWord(int length)
+
+        {
+
+            await using var cmd = _db.CreateCommand("SELECT word FROM dictionary WHERE LENGTH(word) = $1 ORDER BY RANDOM() LIMIT 1"); // fast if word exists in table query 
+
+            cmd.Parameters.AddWithValue(length);
+
+            var result = await cmd.ExecuteScalarAsync(); // Execute fast if word exists in table query 
+
+            return result?.ToString() ?? "";
+        }
     }
+
+
 

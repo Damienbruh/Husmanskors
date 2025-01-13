@@ -24,19 +24,7 @@ form{
     flex-direction: column;
     align-items: center;
 }
-/* Stil för knappen */
-#disconnect {
-    margin: 10px;
-    padding: 10px 20px;
-    background-color: #FFCC00; /* Gul färg */
-    border: none;
-    color: #FFFFFF;
-    cursor: pointer;
-}
-/* Stil för knappen vid hover */
-#disconnect:hover {
-    background-color: #FF9900; /* Mörkare gul färg */
-}
+
 .playerNameDiv, .gamecodeDiv {
     display: flex;
     align-items: center;
@@ -73,17 +61,45 @@ input[type="text"] {
     font-size: 12px;
 }
 
-/* Stil för knappen */
-#forfeitRound {
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f8f8f8;
+}
+
+
+/* Style for the game container include: endTurn, forfeitRound, disconnectGame*/
+.game-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.game-container button {
     margin: 10px;
     padding: 10px 20px;
     background-color: #FF6347; /* Tomatfärg */
     border: none;
     color: #FFFFFF;
+    font-size: 16px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
-/* Stil för knappen vid hover */
-#forfeitRound:hover {
+.game-container button:hover {
     background-color: #FF4500; /* OrangeRed-färg */
 }
+
+.game-container #message {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #333333;
+}
+

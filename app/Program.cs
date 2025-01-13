@@ -39,6 +39,7 @@ class Program
                     SameSite = SameSiteMode.Strict,
                     MaxAge = TimeSpan.FromDays(365) // Cookie expiration
                 });
+                await actions.AddIdToDb(clientId);
                 Console.WriteLine($"New client ID generated and set: {clientId}");
             }
             else
@@ -91,18 +92,104 @@ class Program
             {
                 return Results.BadRequest("not a valid connectType");
             }
-            return success ? Results.Ok(game._gameCode) : Results.StatusCode(500);
+            return success ? Results.Ok(game) : Results.StatusCode(500);
+        });
+        
+        
+        
+        app.MapPost("/changeName", async (HttpContext context) =>
+        {
+            // Player here, is a class that defines the post requestBody format
+            var requestBody = await context.Request.ReadFromJsonAsync<Users>();
+            if (requestBody?.name is null)
+            {
+                return Results.BadRequest("name is required.");
+            }
+            
+            Users user = await actions.AddPlayer(context.Request.Cookies["ClientId"], requestBody.name);
+            return Results.Ok(user); // needs Results.StatusCode(500) if query for db fails
         });
         
         
         
         
+        app.MapGet("/game-status", async (HttpContext context) => 
+        {
+            var gameIdStr = context.Request.Query["gameId"];
+            if (int.TryParse(gameIdStr, out int gameId))
+            {
+                var state = await actions.GetGameStatus(gameId);
+                return state != null ? Results.Ok(new { state }) : Results.StatusCode(500);
+            }
+            else
+            {
+                return Results.BadRequest("Ogiltigt spel-ID.");
+            }
+        });
+
+        app.MapPost("/disconnect", async (HttpContext context) => 
+        {
+            var gameIdStr = context.Request.Query["gameId"];
+            var playerId = context.Request.Cookies["ClientId"];
+            if (int.TryParse(gameIdStr, out int gameId))
+            {
+                var success = await actions.Disconnect(gameId, playerId);
+                return success ? Results.Ok("Du har kopplats från spelet.") : Results.StatusCode(500);
+            }
+            else
+            {
+                return Results.BadRequest("Ogiltigt spel-ID.");
+            }
+        });
+
+        
+
+        app.MapPost("/forfeit-round", async (HttpContext context) => 
+        {
+            var gameIdStr = context.Request.Query["gameId"];
+            var playerId = context.Request.Cookies["ClientId"];
+            if (int.TryParse(gameIdStr, out int gameId))
+            {
+                var success = await actions.ForfeitRound(gameId, playerId);
+                return success ? Results.Ok("Rundan förlorades framgångsrikt.") : Results.StatusCode(500);
+            }
+            else
+            {
+                return Results.BadRequest("Ogiltigt spel-ID.");
+            }
+        });
+
+        
+        
+        {
+
+            app.MapPost("/new-word", async (HttpContext context) =>
+
+            {
+
+
+                var requestBody = await context.Request.ReadFromJsonAsync<WordRequest>();
+
+                if (requestBody?.Word is null)
+
+                {
+
+                    return Results.BadRequest("Word is required.");
+
+                }
+
+                bool success = await actions.GetWord(word: requestBody.Word);
+
+                return success ? Results.Ok("Word added successfully.") : Results.StatusCode(500);
+                
+            });
+
+        }
         
         
         
         app.Run(); //startar servern 
         
         Console.WriteLine("Program will now exit, press any key to continue");
-        Console.ReadKey();
     }
 }

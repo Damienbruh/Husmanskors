@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
@@ -7,17 +8,37 @@
     <title>Husmanskors</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
-<body>
-<div class="playername">
-    <form id="addPlayer">
-        <label>1. Ditt namn</label>
-        <label>
-            <input type="text" name="playerName" placeholder="Användarnamn">
-        </label>
-        <input type="submit" value="Skapa spel" href="">
-        <input type="submit" value="Gå med i spel" href="">
-    </form>
-</div>
 
+<body>
+    <header>
+        <h1>Welcome to HusmansKors</h1>
+    </header>
+    <main>
+        <div class="playername">
+            <!--joinGame-->
+            <form id="SessionForm">
+                <div class="playerNameDiv">
+                    <label for="playerName"></label>
+                    <input type="text" id="playerName" name="playerName" placeholder="Användarnamn">
+                </div>
+                <div class="gamecodeDiv">
+                    <label for="gamecode"></label>
+                    <input type="text" id="gamecode" name="gamecode" placeholder="Gamecode">
+                </div>
+                <div class="changeNameDiv">
+                    <button type="button" id="ChangeName">Ändra Namn</button>
+                </div>
+                <div class="buttonDiv">
+                    <button type="button" id="StartSession">Skapa Spel</button>
+                    <button type="button" id="ConnectSessionViaCode">Gå med Spel</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <!-- Task: Disconnect from the game -->
+    <button id="disconnect" style="display: none;">Koppla från spelet</button>
+    <!-- Task: Forfeit a round -->
+    <button id="forfeitRound" style="display: none;">Ge upp rundan</button>
 </body>
+
 </html>

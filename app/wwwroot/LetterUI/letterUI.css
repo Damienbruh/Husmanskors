@@ -9,19 +9,21 @@
 }
 
 .letterUI {
+    display: grid;
     margin-top: 39%;
+    row-gap: 10px;
 }
 
 .topRow{
     display: grid;
     grid-template-columns: 1fr repeat(15, 50px) 1fr;
-    column-gap: 15px;
+    column-gap: 10px;
 }
 
 .bottomRow{
     display: grid;
     grid-template-columns: 1fr repeat(14, 50px) 1fr;
-    column-gap: 15px;
+    column-gap: 10px;
 }
 
 h1{
@@ -36,4 +38,22 @@ h2{
     font-family: Inter;
     font-size: 15px;
     margin: auto;
+}
+
+.box{
+    width: 55px;
+    height: 55px;
+    border: solid;
+    position: absolute;
+    top: 300px;
+}
+
+.red{
+    left: 1000px;
+    border-color: red;
+}
+
+.green{
+    left: 600px;
+    border-color: green;
 }

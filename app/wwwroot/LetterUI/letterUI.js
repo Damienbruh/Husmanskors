@@ -1,17 +1,27 @@
 var tile = $(".tile")
 
 tile.hover(function(){
-    $(this).css("background-color", "navajowhite");
+    $(this).animate({"background-color": "#ffdead"}, {queue: false, duration: 200});
 }, function(){
-    $(this).css("background-color", "antiquewhite");
+    $(this).animate({"background-color": "#faebd7"}, {queue: false, duration: 200});
 });
 
 $( function() {
-    $( ".tile" ).draggable();
+    tile.draggable();
+    if($(".box").children().length < 1)
+    {
+        $(".box").droppable({
+            drop: function( event, ui ) {
+                // $(ui.draggable).animate({"top":"", "left":""}, {queue: false});
+                var clone = $(ui.draggable).clone().appendTo($(this));
+                clone.css({"top":"", "left":""});
+            }
+        });
+    }
 } );
 
 tile.mouseup(function() {
-    $(".tile").animate({"top":"", "left":""});
+    $(".tile").animate({"top":"", "left":""}, {queue: false});
 })
 
 

@@ -1,5 +1,7 @@
 ﻿using Npgsql;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+
 namespace app;
 
 public class Actions
@@ -12,11 +14,6 @@ public class Actions
     }
     public async Task<(bool, Game? game)> NewSession(string clientId)
     {
-        if (String.IsNullOrEmpty(clientId))
-        {
-            return (false, null);
-        }
-        
         Game game = null;
         int gameId;
 
@@ -52,11 +49,37 @@ public class Actions
         game = new Game(gameId, clientId, null, "lobby", gameCode);
         return (true, game);
     }
-    public async Task<(bool, Game game)> JoinSessionViaCode(string clientId, string gameCode)
+    public async Task<(bool, Game? game)> JoinSessionViaCode(string clientId, string gameCode)
     {
+        if (String.IsNullOrEmpty(gameCode))
+        {
+            return (false, null);
+        }
+
+        Game game = null;
+
+        await using var cmd = _db.CreateCommand("UPDATE games SET player_2 = NULL WHERE player_2 = $1 AND state = 'lobby'");
+        cmd.Parameters.AddWithValue(clientId);
+        await cmd.ExecuteNonQueryAsync();
         
-        //update games 
         
+        await using var cmd2 = _db.CreateCommand("UPDATE games SET player_2 = $1 WHERE player_2 IS NULL " + 
+                                                 "AND gamecode = $2 AND state = 'lobby' RETURNING game_id, player_1");
+        cmd2.Parameters.AddWithValue(clientId);
+        cmd2.Parameters.AddWithValue(gameCode);
+        await using (var reader = await cmd2.ExecuteReaderAsync())
+        {
+            List<(int id, string cId)> results = new List<(int id, string cId)>();
+            while (await reader.ReadAsync())
+            {
+                results.Add((reader.GetInt32(0), reader.GetString(1)));
+            }
+
+            if (results.Count == 1)
+            {
+                return (true, new Game(results[0].id, results[0].cId, clientId, "lobby", gameCode));
+            }
+        }
         return (false, null);
     }
     public async Task<Users?> AddPlayer(string clientId, string name)
@@ -80,93 +103,97 @@ public class Actions
 
         return new Users(clientId, name);
     }
-    
+
+    public async Task AddIdToDb(string clientId)
+    {
+        await using var cmd = _db.CreateCommand("INSERT INTO users (user_id)" +
+                                                "VALUES ($1) ON CONFLICT (user_id) DO NOTHING");
+        cmd.Parameters.AddWithValue(clientId);
+        await cmd.ExecuteNonQueryAsync();
+    }
     
     
 
-        // Task: Disconnect from the game
-        public async Task<bool> Disconnect(int gameId, string playerId)
+    // Task: Disconnect from the game
+    public async Task<bool> Disconnect(int gameId, string playerId)
+    {
+        await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
+        cmd.Parameters.AddWithValue(gameId);
+        await using var reader = await cmd.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
         {
-            await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
-            cmd.Parameters.AddWithValue(gameId);
-            await using var reader = await cmd.ExecuteReaderAsync();
+            string state = reader.GetString(0);
+            string player1 = reader.GetString(1);
+            string player2 = reader.IsDBNull(2) ? null : reader.GetString(2);
 
-            if (await reader.ReadAsync())
+            if (player1 == playerId || player2 == playerId)
             {
-                string state = reader.GetString(0);
-                string player1 = reader.GetString(1);
-                string player2 = reader.IsDBNull(2) ? null : reader.GetString(2);
-
-                if (player1 == playerId || player2 == playerId)
+                if (state == "lobby")
                 {
-                    if (state == "lobby")
-                    {
-                        // Ta bort spelet från databasen om det är i "lobby"-status
-                        await using var deleteCmd = _db.CreateCommand("DELETE FROM games WHERE game_id = $1");
-                        deleteCmd.Parameters.AddWithValue(gameId);
-                        int affectedRows = await deleteCmd.ExecuteNonQueryAsync();
-                        return affectedRows > 0;
-                    }
-                    else if (state == "active")
-                    {
-                        // Uppdatera spelets status till "ended" om det är i "active"-status
-                        await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'ended' WHERE game_id = $1");
-                        updateCmd.Parameters.AddWithValue(gameId);
-                        int affectedRows = await updateCmd.ExecuteNonQueryAsync();
-                        return affectedRows > 0;
-                    }
+                    // Ta bort spelet från databasen om det är i "lobby"-status
+                    await using var deleteCmd = _db.CreateCommand("DELETE FROM games WHERE game_id = $1");
+                    deleteCmd.Parameters.AddWithValue(gameId);
+                    int affectedRows = await deleteCmd.ExecuteNonQueryAsync();
+                    return affectedRows > 0;
+                }
+                else if (state == "active")
+                {
+                    // Uppdatera spelets status till "ended" om det är i "active"-status
+                    await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'ended' WHERE game_id = $1");
+                    updateCmd.Parameters.AddWithValue(gameId);
+                    int affectedRows = await updateCmd.ExecuteNonQueryAsync();
+                    return affectedRows > 0;
                 }
             }
-
-            return false;
         }
+        return false;
+    }
+    
+        // Task: Forfeit a round
+    public async Task<bool> ForfeitRound(int gameId, string playerId)
+    {
+        await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
+        cmd.Parameters.AddWithValue(gameId);
+        await using var reader = await cmd.ExecuteReaderAsync();
 
-        
-        
-            // Task: Forfeit a round
-            public async Task<bool> ForfeitRound(int gameId, string playerId)
-            {
-                await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
-                cmd.Parameters.AddWithValue(gameId);
-                await using var reader = await cmd.ExecuteReaderAsync();
-
-                if (await reader.ReadAsync())
-                {
-                    string state = reader.GetString(0);
-                    string player1 = reader.GetString(1);
-                    string player2 = reader.IsDBNull(2) ? null : reader.GetString(2);
-
-                    if (state == "active" && (player1 == playerId || player2 == playerId))
-                    {
-                        // Uppdatera spelets status för att ange att spelaren har gett upp rundan
-                        await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'forfeited' WHERE game_id = $1 AND (player_1 = $2 OR player_2 = $2)");
-                        updateCmd.Parameters.AddWithValue(gameId);
-                        updateCmd.Parameters.AddWithValue(playerId);
-                        int affectedRows = await updateCmd.ExecuteNonQueryAsync();
-                        return affectedRows > 0;
-                    }
-                }
-
-                return false;
-            }
-
-            
-        
-        // Task: Get the game status
-        public async Task<string> GetGameStatus(int gameId)
+        if (await reader.ReadAsync())
         {
-            await using var cmd = _db.CreateCommand("SELECT state FROM games WHERE game_id = $1");
-            cmd.Parameters.AddWithValue(gameId);
-            await using var reader = await cmd.ExecuteReaderAsync();
+            string state = reader.GetString(0);
+            string player1 = reader.GetString(1);
+            string player2 = reader.IsDBNull(2) ? null : reader.GetString(2);
 
-            if (await reader.ReadAsync())
+            if (state == "active" && (player1 == playerId || player2 == playerId))
             {
-                return reader.GetString(0);
+                // Uppdatera spelets status för att ange att spelaren har gett upp rundan
+                await using var updateCmd = _db.CreateCommand("UPDATE games SET state = 'forfeited' WHERE game_id = $1 AND (player_1 = $2 OR player_2 = $2)");
+                updateCmd.Parameters.AddWithValue(gameId);
+                updateCmd.Parameters.AddWithValue(playerId);
+                int affectedRows = await updateCmd.ExecuteNonQueryAsync();
+                return affectedRows > 0;
             }
-
-            return null;
         }
-        
+
+        return false;
+    }
+
+    
+
+    // Task: Get the game status
+    public async Task<string> GetGameStatus(int gameId)
+    {
+        await using var cmd = _db.CreateCommand("SELECT state FROM games WHERE game_id = $1");
+        cmd.Parameters.AddWithValue(gameId);
+        await using var reader = await cmd.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            return reader.GetString(0);
+        }
+
+        return null;
+    }
+
         
         public async Task<bool> GetWord(string word)
 

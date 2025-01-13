@@ -39,6 +39,7 @@ class Program
                     SameSite = SameSiteMode.Strict,
                     MaxAge = TimeSpan.FromDays(365) // Cookie expiration
                 });
+                await actions.AddIdToDb(clientId);
                 Console.WriteLine($"New client ID generated and set: {clientId}");
             }
             else
@@ -91,7 +92,7 @@ class Program
             {
                 return Results.BadRequest("not a valid connectType");
             }
-            return success ? Results.Ok(game._gameCode) : Results.StatusCode(500);
+            return success ? Results.Ok(game) : Results.StatusCode(500);
         });
         
         

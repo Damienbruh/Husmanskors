@@ -12,11 +12,11 @@ let roundTimeInput = 40;          // round-time
 let numberOfRoundsInput = 2;      // number-of-rounds
 let extraPointsCheckbox = false; // Boolean extra-points
 
-const defaultSettings = [
+const defaultSettings = {
     roundTimeInput,
     numberOfRoundsInput,
     extraPointsCheckbox
-];
+};
 
 roundTimeInputE.addEventListener('input', function (event) {
     //** Koden går här för att modiferar default settingsarna
@@ -55,11 +55,14 @@ $('#SessionForm').on("click", "button", async function(event) {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     connectType: clickedButtonId,
-                    GameCode: gameCode
+                    GameCode: gameCode,
+                    Settings: defaultSettings
                 })
             });
-
             break;
+        default:
+            console.log("Button does not exist")
+            return;
         }
 
     console.log('response', response);

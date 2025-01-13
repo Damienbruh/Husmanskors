@@ -58,7 +58,6 @@ $('#SessionForm').on("click", "button", async function(event) {
                     GameCode: gameCode
                 })
             });
-
             break;
         }
 

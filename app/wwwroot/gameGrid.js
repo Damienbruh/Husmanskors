@@ -58,11 +58,18 @@ function createGrid() {
         return;
     }
 
+    let gridSize = 8;
+    let wordRow = Math.floor(gridSize/2);
+    let wordStartIndex = wordRow * gridSize; // Word row * columns
 
-    for (let i = 0; i < 11 * 11; i++) {
+    for (let i = 0; i < gridSize * gridSize; i++) {
         const cell = document.createElement('div');
         cell.className = 'grid-item';
+        if(i >= wordStartIndex && i < wordStartIndex + gridSize){
+            cell.classList.add("start-word");
+        }
         gridContainer.appendChild(cell);
+        console.log(i);
     }
 
 }

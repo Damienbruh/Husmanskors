@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 
 namespace app;
 
-class Program
+class Program   
 {
     static async Task Main()
     {   
@@ -39,6 +39,7 @@ class Program
                     SameSite = SameSiteMode.Strict,
                     MaxAge = TimeSpan.FromDays(365) // Cookie expiration
                 });
+                context.Items[clientIdCookieName] = clientId;
                 await actions.AddIdToDb(clientId);
                 Console.WriteLine($"New client ID generated and set: {clientId}");
             }
@@ -57,7 +58,7 @@ class Program
             using var rng = RandomNumberGenerator.Create();
             var bytes = new byte[16];
             rng.GetBytes(bytes);
-            return Convert.ToBase64String(bytes);
+            return Convert.ToBase64String(bytes).TrimEnd('=');
         }
 
         // methods for proccessing posts and gets
@@ -73,12 +74,20 @@ class Program
         app.MapPost("/join-session", async (HttpContext context) =>  // hanterar join och create session
         {
             var requestBody = await context.Request.ReadFromJsonAsync<JoinSession>();
-            Game game;
-            bool success;
             if(requestBody?.connectType is null)
             {
                 return Results.BadRequest("not a valid request.");
             } 
+            
+            Console.WriteLine($"ConnectType: {requestBody.connectType}");
+            Console.WriteLine($"Game Code: {requestBody.GameCode}");
+            Console.WriteLine($"Round Time:: {requestBody.Settings.roundTimeInput} secods.");
+            Console.WriteLine($"Number of Rounds: {requestBody.Settings.numberOfRoundsInput}");
+            Console.WriteLine($"Extra Points: {requestBody.Settings.extraPointsCheckbox}");
+            
+            Game game;
+            bool success;
+            
             
             if (requestBody.connectType == "StartSession")
             {
@@ -106,7 +115,7 @@ class Program
                 return Results.BadRequest("name is required.");
             }
             
-            Users user = await actions.AddPlayer(context.Request.Cookies["ClientId"], requestBody.name);
+            Users user = await actions.AddPlayer(context.Request.Cookies["ClientId"] ?? context.Items["ClientId"]?.ToString(), requestBody.name);
             return Results.Ok(user); // needs Results.StatusCode(500) if query for db fails
         });
         
@@ -163,25 +172,18 @@ class Program
         
         {
 
-            app.MapPost("/new-word", async (HttpContext context) =>
-
+            app.MapGet("/new-word", async (HttpContext context) =>
             {
+                Int32 wordLength = Int32.Parse(context.Request.Query["length"]);
 
+                string word = await actions.GetWord(wordLength);
 
-                var requestBody = await context.Request.ReadFromJsonAsync<WordRequest>();
+                return word;
+                //return String.IsNullOrEmpty(word) ? Results.BadRequest("cannot find a word") : word; silly me
+                //bool success = await actions.GetWord(word: requestBody.Word);
 
-                if (requestBody?.Word is null)
+                //return success ? Results.Ok("Word added successfully.") : Results.StatusCode(500);
 
-                {
-
-                    return Results.BadRequest("Word is required.");
-
-                }
-
-                bool success = await actions.GetWord(word: requestBody.Word);
-
-                return success ? Results.Ok("Word added successfully.") : Results.StatusCode(500);
-                
             });
 
         }

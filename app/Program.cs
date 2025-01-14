@@ -63,6 +63,7 @@ class Program
 
         // methods for proccessing posts and gets
 
+        
         /*
          * todo
          * behöver kunna hantera ifall en spelare är connected eller ej, ifall en spelare försöker öppna ny lobby medans i en lobby
@@ -103,6 +104,8 @@ class Program
             return success ? Results.Ok(game) : Results.StatusCode(500);
         });
         
+        
+        
         app.MapPost("/changeName", async (HttpContext context) =>
         {
             // Player here, is a class that defines the post requestBody format
@@ -116,7 +119,9 @@ class Program
             return Results.Ok(user); // needs Results.StatusCode(500) if query for db fails
         });
         
-        // Task: Get game status
+        
+        
+        
         app.MapGet("/game-status", async (HttpContext context) => 
         {
             var gameIdStr = context.Request.Query["gameId"];
@@ -131,7 +136,6 @@ class Program
             }
         });
 
-        // Task: Disconnect game
         app.MapPost("/disconnect", async (HttpContext context) => 
         {
             var gameIdStr = context.Request.Query["gameId"];
@@ -147,7 +151,8 @@ class Program
             }
         });
 
-        // Task: Forfeit a round
+        
+
         app.MapPost("/forfeit-round", async (HttpContext context) => 
         {
             var gameIdStr = context.Request.Query["gameId"];
@@ -156,22 +161,6 @@ class Program
             {
                 var success = await actions.ForfeitRound(gameId, playerId);
                 return success ? Results.Ok("Rundan förlorades framgångsrikt.") : Results.StatusCode(500);
-            }
-            else
-            {
-                return Results.BadRequest("Ogiltigt spel-ID.");
-            }
-        });
-
-        // Task: End turn early
-        app.MapPost("/end-turn", async (HttpContext context) => 
-        {
-            var gameIdStr = context.Request.Query["gameId"];
-            var playerId = context.Request.Cookies["ClientId"];
-            if (int.TryParse(gameIdStr, out int gameId))
-            {
-                var success = await actions.EndTurn(gameId, playerId);
-                return success ? Results.Ok("Turen har avslutats.") : Results.StatusCode(500);
             }
             else
             {

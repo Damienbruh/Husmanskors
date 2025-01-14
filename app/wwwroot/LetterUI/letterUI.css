@@ -2,14 +2,15 @@
     background-color: antiquewhite;
     border: solid;
     margin: auto;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     display: flex;
     cursor: pointer;
 }
 
 .letterUI {
     display: grid;
+    position: absolute;
     margin-top: 39%;
     row-gap: 10px;
 }
@@ -28,7 +29,7 @@
 
 h1{
     text-align: center;
-    font-size: 40px;
+    font-size: 35px;
     margin: auto;
     margin-top: 5px;
     font-family: Inter;
@@ -36,7 +37,7 @@ h1{
 h2{
     position: absolute;
     font-family: Inter;
-    font-size: 15px;
+    font-size: 14px;
     margin: auto;
 }
 
@@ -49,11 +50,15 @@ h2{
 }
 
 .red{
-    left: 1000px;
+    left: 665px;
     border-color: red;
 }
 
 .green{
     left: 600px;
     border-color: green;
+}
+.blue{
+    left: 730px;
+    border-color: blue;
 }

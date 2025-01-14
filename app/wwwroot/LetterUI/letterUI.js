@@ -1,4 +1,4 @@
-var tile = $(".tile")
+var tile = $(".letterUI > * > .tile")
 
 tile.hover(function(){
     $(this).animate({"background-color": "#ffdead"}, {queue: false, duration: 200});
@@ -8,23 +8,32 @@ tile.hover(function(){
 
 $( function() {
     tile.draggable();
-    if($(".box").children().length < 1)
-    {
-        $(".box").droppable({
+    
+    
+        $(".grid-item").droppable({
             drop: function( event, ui ) {
-                // $(ui.draggable).animate({"top":"", "left":""}, {queue: false});
-                var clone = $(ui.draggable).clone().appendTo($(this));
-                clone.css({"top":"", "left":""});
+                if($(this).children().length < 1){
+                    const clone = $(ui.draggable).clone().appendTo($(this));
+                    clone.css({"top":"", "left":"", "background-color": "#faebd7", "border": "1px solid"});
+                    clone.addClass("placed-tile");
+                }
+                else{
+                    $(ui.draggable).animate({"background-color": "#cd5c5c"}, {queue: true, duration: 10});
+                    $(ui.draggable).animate({"background-color": "#faebd7"}, {queue: true, duration: 500});
+                }
+                
             }
         });
-    }
+    
 } );
 
 tile.mouseup(function() {
-    $(".tile").animate({"top":"", "left":""}, {queue: false});
+    tile.animate({"top":"", "left":""}, {queue: false});
 })
 
-
+// $(".grid-item").hover(function () {
+//    
+// });
 
 
 

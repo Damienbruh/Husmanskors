@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Game</title>
+    <link rel="stylesheet" href="gameGrid.css">
+    <link rel="stylesheet" href="LetterUI/letterUI.css">
+    <script src="LetterUI/letterUI.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js" integrity="sha512-MSOo1aY+3pXCOCdGAYoBZ6YGI0aragoQsg1mKKBHXCYPIWxamwOE7Drh+N5CPgGI5SA9IEKJiPjdfqWFWmZtRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+<div class="game-container">
+    <div class="timer" id="timer">Time Remaining: 03:00</div>
+    <button id="startGame">Start Game</button>
+    <div class="grid-container" id="gameGrid"></div>
+</div>
+
+<div class="letterUI">
+    <div class="topRow ">
+        <div></div>
+        <div class="tile"><h1 class="letter">A</h1><h2 class="score">1</h2></div>
+        <div class="tile"><h1 class="letter">B</h1><h2 class="score">4</h2></div>
+        <div class="tile"><h1 class="letter">C</h1><h2 class="score">10</h2></div>
+        <div class="tile"><h1 class="letter">D</h1><h2 class="score">2</h2></div>
+        <div class="tile"><h1 class="letter">E</h1><h2 class="score">1</h2></div>
+        <div class="tile"><h1 class="letter">F</h1><h2 class="score">4</h2></div>
+        <div class="tile"><h1 class="letter">G</h1><h2 class="score">3</h2></div>
+        <div class="tile"><h1 class="letter">H</h1><h2 class="score">3</h2></div>
+        <div class="tile"><h1 class="letter">I</h1><h2 class="score">1</h2></div>
+        <div class="tile"><h1 class="letter">J</h1><h2 class="score">8</h2></div>
+        <div class="tile"><h1 class="letter">K</h1><h2 class="score">3</h2></div>
+        <div class="tile"><h1 class="letter">L</h1><h2 class="score">2</h2></div>
+        <div class="tile"><h1 class="letter">M</h1><h2 class="score">3</h2></div>
+        <div class="tile"><h1 class="letter">N</h1><h2 class="score">1</h2></div>
+        <div class="tile"><h1 class="letter">O</h1><h2 class="score">1</h2></div>
+        <div></div>
+    </div>
+    <div class="bottomRow">
+        <div></div>
+        <div class="tile"><h1 class="letter">P</h1><h2 class="score">4</h2></div>
+        <div class="tile"><h1 class="letter">Q</h1><h2 class="score">10</h2></div>
+        <div class="tile"><h1 class="letter">R</h1><h2 class="score">1</h2></div>
+        <div class="tile"><h1 class="letter">S</h1><h2 class="score">1</h2></div>
+        <div class="tile"><h1 class="letter">T</h1><h2 class="score">1</h2></div>
+        <div class="tile"><h1 class="letter">U</h1><h2 class="score">3</h2></div>
+        <div class="tile"><h1 class="letter">V</h1><h2 class="score">4</h2></div>
+        <div class="tile"><h1 class="letter">W</h1><h2 class="score">10</h2></div>
+        <div class="tile"><h1 class="letter">X</h1><h2 class="score">10</h2></div>
+        <div class="tile"><h1 class="letter">Y</h1><h2 class="score">10</h2></div>
+        <div class="tile"><h1 class="letter">Z</h1><h2 class="score">10</h2></div>
+        <div class="tile"><h1 class="letter">Å</h1><h2 class="score">7</h2></div>
+        <div class="tile"><h1 class="letter">Ä</h1><h2 class="score">7</h2></div>
+        <div class="tile"><h1 class="letter">Ö</h1><h2 class="score">7</h2></div>
+        <div></div>
+    </div>
+</div>  
+
+<script src="gameGrid.js"></script>
+</body>
+</html>

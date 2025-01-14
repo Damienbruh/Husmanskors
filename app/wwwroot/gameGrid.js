@@ -30,6 +30,27 @@ async function testWord(e) {
     $('#message').text(word + (data ? ' finns ' : ' finns inte ') + ' i databasen')
 }
 
+// function createGrid() {
+//     const gridContainer = document.getElementById('gameGrid');
+//     if (!gridContainer) {
+//         console.error('No grid container found');
+//         return;
+//     }
+//
+//
+//     for (let i = 0; i < 11 * 11; i++) {
+//         const cell = document.createElement('input');
+//         cell.type = 'text';
+//         cell.maxLength = 1; // Allow one character
+//         cell.className = 'grid-item';
+//         cell.addEventListener('input', (e) => {
+//             e.target.value = e.target.value.toUpperCase();
+//         });
+//         gridContainer.appendChild(cell);
+//     }
+//
+// }
+
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
@@ -39,13 +60,8 @@ function createGrid() {
 
 
     for (let i = 0; i < 11 * 11; i++) {
-        const cell = document.createElement('input');
-        cell.type = 'text';
-        cell.maxLength = 1; // Allow one character
+        const cell = document.createElement('div');
         cell.className = 'grid-item';
-        cell.addEventListener('input', (e) => {
-            e.target.value = e.target.value.toUpperCase();
-        });
         gridContainer.appendChild(cell);
     }
 

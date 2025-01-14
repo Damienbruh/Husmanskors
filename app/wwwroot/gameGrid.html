@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word Game with Timer</title>
-    <link rel="stylesheet" href="gameGrid.css">  
+    <link rel="stylesheet" href="gameGrid.css">
 </head>
 <body>
 <div class="game-container">
-    <div class="timer" id="timer">Time Remaining: 03:00</div> 
+    <div class="timer" id="timer">Time Remaining: 03:00</div>
     <div class="grid-container" id="gameGrid">
-      
+
     </div>
 </div>
+<div class="controls-container">
+    <button id="disconnectGame">Koppla från spelet</button>
+    <button id="forfeitRound">Ge upp rundan</button>
+    <button id="endGame">Avsluta spelet</button>
+    <div id="message"></div>
+</div>
 
-<script src="gameGrid.js"></script> 
+<script src="gameGrid.js"></script>
 </body>
 </html>

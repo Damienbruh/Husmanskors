@@ -73,8 +73,8 @@ body {
 }
 
 
-/* Style for the game container include: endTurn, forfeitRound, disconnectGame*/
-.game-container {
+/* Style for the controls container (buttons and message) */
+.controls-container {
     text-align: center;
     padding: 20px;
     background-color: #f0f0f0;
@@ -82,7 +82,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.game-container button {
+.controls-container button {
     margin: 10px;
     padding: 10px 20px;
     background-color: #FF6347; /* Tomatfärg */
@@ -93,13 +93,12 @@ body {
     border-radius: 5px;
 }
 
-.game-container button:hover {
+.controls-container button:hover {
     background-color: #FF4500; /* OrangeRed-färg */
 }
 
-.game-container #message {
+.controls-container #message {
     margin-top: 20px;
     font-size: 20px;
     color: #333333;
 }
-

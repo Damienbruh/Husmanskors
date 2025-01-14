@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 
 namespace app;
 
-class Program
+class Program   
 {
     static async Task Main()
     {   

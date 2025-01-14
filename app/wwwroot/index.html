@@ -10,38 +10,38 @@
 </head>
 
 <body>
-<header>
-    <h1>Welcome to HusmansKors</h1>
-</header>
-<main>
-    <div class="playername">
-        <!--joinGame-->
-        <form id="SessionForm">
-            <div class="playerNameDiv">
-                <label for="playerName"></label>
-                <input type="text" id="playerName" name="playerName" placeholder="Användarnamn">
-            </div>
-            <div class="gamecodeDiv">
-                <label for="gamecode"></label>
-                <input type="text" id="gamecode" name="gamecode" placeholder="Gamecode">
-            </div>
-            <div class="changeNameDiv">
-                <button type="button" id="ChangeName">Ändra Namn</button>
-            </div>
-            <div class="buttonDiv">
-                <!--<button type="button" id="StartSession">Skapa Spel</button> -- DAVIDS GAMLA-->
-                <button type="button" id="ConnectSessionViaCode">Gå med Spel</button>
-                <button type="button" id="connectOptions">Skapa Spel</button>
-            </div>
-        </form>
-    </div>
-    <div class="game-container">
-        <button id="disconnectGame" style="display: none;">Koppla från spelet</button>
-        <button id="forfeitRound" style="display: none;">Ge upp rundan</button>
-        <button id="endTurn" style="display: none;">Avsluta turen</button>
-        <div id="message"></div>
-    </div>
-</main>
+    <header>
+        <h1>Welcome to HusmansKors</h1>
+    </header>
+    <main>
+        <div class="playername">
+            <!--joinGame-->
+            <form id="SessionForm">
+                <div class="playerNameDiv">
+                    <label for="playerName"></label>
+                    <input type="text" id="playerName" name="playerName" placeholder="Användarnamn">
+                </div>
+                <div class="gamecodeDiv">
+                    <label for="gamecode"></label>
+                    <input type="text" id="gamecode" name="gamecode" placeholder="Gamecode">
+                </div>
+                <div class="changeNameDiv">
+                    <button type="button" id="ChangeName">Ändra Namn</button>
+                </div>
+                <div class="buttonDiv">
+                    <!--<button type="button" id="StartSession">Skapa Spel</button> -- DAVIDS GAMLA-->
+                    <button type="button" id="ConnectSessionViaCode">Gå med Spel</button>
+                    <button type="button" id="connectOptions">Skapa Spel</button>
+                </div>
+            </form>
+        </div>
+        <div class="game-container">
+            <button id="disconnectGame">Koppla från spelet</button>
+            <button id="forfeitRound">Ge upp rundan</button>
+            <button id="endGame">Avsluta spelet</button>
+            <div id="message"></div>
+        </div>
+    </main>
 </body>
 
 </html>

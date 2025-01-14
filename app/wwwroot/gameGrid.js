@@ -58,14 +58,20 @@ function createGrid() {
         return;
     }
 
-    let gridSize = 8;
-    let wordRow = Math.floor(gridSize/2);
-    let wordStartIndex = wordRow * gridSize; // Word row * columns
+    let gridWidth = 8;
+    let gridHeight = 8;
+    /*
+    sätt css här dynamiskt för .grid-container
+    grid-template-columns: repeat(gridWidth, 48px);
+    grid-template-rows: repeat(gridHeight, 48px);
+     */
+    let wordRow = Math.floor(gridHeight/2);
+    let wordStartIndex = wordRow * gridWidth; // Word row * columns
 
-    for (let i = 0; i < gridSize * gridSize; i++) {
+    for (let i = 0; i < gridHeight * gridWidth; i++) {
         const cell = document.createElement('div');
         cell.className = 'grid-item';
-        if(i >= wordStartIndex && i < wordStartIndex + gridSize){
+        if(i >= wordStartIndex && i < wordStartIndex + gridWidth){
             cell.classList.add("start-word");
         }
         gridContainer.appendChild(cell);

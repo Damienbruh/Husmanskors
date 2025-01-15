@@ -1,6 +1,6 @@
 .tile {
     background-color: antiquewhite;
-    border: solid;
+    border: 1px solid black;
     margin: auto;
     width: 45px;
     height: 45px;

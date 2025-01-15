@@ -1,4 +1,8 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Oswald:wght@200..700&display=swap');
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -25,8 +29,8 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(8, 48px);
-    grid-template-rows: repeat(8, 48px);
+    grid-template-columns: repeat(9, 48px);
+    grid-template-rows: repeat(9, 48px);
     gap: 0;
 }
 
@@ -34,13 +38,17 @@ body {
     width: 48px;
     height: 48px;
     background-color: #fff;
-    border:6px solid black;
+    border:2px solid black;
     text-align: center;
     vertical-align: middle;
     font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     outline: none;
+}
+
+.grid-item>.tile{
+    border: none;
 }
 
 .grid-item:focus {

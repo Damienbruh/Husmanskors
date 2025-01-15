@@ -25,8 +25,8 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(11, 48px);
-    grid-template-rows: repeat(11, 48px);
+    grid-template-columns: repeat(8, 48px);
+    grid-template-rows: repeat(8, 48px);
     gap: 0;
 }
 
@@ -46,4 +46,13 @@ body {
 .grid-item:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px #007bff;
+}
+
+/*Show points*/
+.score-container { 
+    margin-top: 20px; 
+} 
+#current-score { 
+    font-size: 24px; 
+    font-weight: bold; 
 }

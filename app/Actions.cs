@@ -195,19 +195,33 @@ public class Actions
     }
 
         
-        public async Task<string> GetWord(int length)
+    public async Task<string> GetWord(int length)
 
-        {
+    {
 
-            await using var cmd = _db.CreateCommand("SELECT word FROM dictionary WHERE LENGTH(word) = $1 ORDER BY RANDOM() LIMIT 1"); // fast if word exists in table query 
+    await using var cmd = _db.CreateCommand("SELECT word FROM dictionary WHERE LENGTH(word) = $1 ORDER BY RANDOM() LIMIT 1"); // fast if word exists in table query 
 
-            cmd.Parameters.AddWithValue(length);
+    cmd.Parameters.AddWithValue(length);
 
-            var result = await cmd.ExecuteScalarAsync(); // Execute fast if word exists in table query 
+    var result = await cmd.ExecuteScalarAsync(); // Execute fast if word exists in table query 
 
-            return result?.ToString() ?? "";
-        }
+        return result?.ToString() ?? "";
     }
+    
+    
+    public async Task<bool> IsValidWord(string word)
+    {
+        await using var cmd = _db.CreateCommand("SELECT COUNT(*) FROM dictionary WHERE LOWER(word) = LOWER($1)");
+        cmd.Parameters.AddWithValue(word);
+        var result = await cmd.ExecuteScalarAsync();
+        return (long)result > 0;
+    }
+
+
+        
+        
+}
+
 
 
 

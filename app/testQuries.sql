@@ -9,7 +9,8 @@ INSERT INTO users (user_id, name)
 VALUES (3, 'PlayerThree');
 
 
-
+-- hitta ordet hus i dictionary
+SELECT * FROM dictionary WHERE word = 'synd';
 
 --välj de 10 första orden från dictionary
 SELECT * FROM dictionary ORDER BY word LIMIT 10;

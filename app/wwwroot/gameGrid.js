@@ -1,9 +1,12 @@
-﻿
+﻿let min = 5;
+let max = 15;
+let randomGridInt = Math.floor(Math.random() * (max - min + 1)) + min; // Generates random int value
 
+console.log(`Random generated number for grid: ${randomGridInt}`);
 
 document.addEventListener("DOMContentLoaded", () => {
     createGrid(); // Initialize the grid
-    document.getElementById("startGame").addEventListener("click", startGame); 
+    document.getElementById("startGame").addEventListener("click", startGame);
 });
 
 async function startGame() {
@@ -30,54 +33,28 @@ async function testWord(e) {
     $('#message').text(word + (data ? ' finns ' : ' finns inte ') + ' i databasen')
 }
 
-// function createGrid() {
-//     const gridContainer = document.getElementById('gameGrid');
-//     if (!gridContainer) {
-//         console.error('No grid container found');
-//         return;
-//     }
-//
-//
-//     for (let i = 0; i < 11 * 11; i++) {
-//         const cell = document.createElement('input');
-//         cell.type = 'text';
-//         cell.maxLength = 1; // Allow one character
-//         cell.className = 'grid-item';
-//         cell.addEventListener('input', (e) => {
-//             e.target.value = e.target.value.toUpperCase();
-//         });
-//         gridContainer.appendChild(cell);
-//     }
-//
-// }
-
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
         console.error('No grid container found');
         return;
     }
+    
+    gridContainer.style.gridTemplateColumns = `repeat(${randomGridInt}, 40px)`; // Sets the style for the grid rows/ columns
+    gridContainer.style.gridTemplateRows = `repeat(${randomGridInt}, 40px)`;
 
-    let gridWidth = 8;
-    let gridHeight = 8;
-    /*
-    sätt css här dynamiskt för .grid-container
-    grid-template-columns: repeat(gridWidth, 48px);
-    grid-template-rows: repeat(gridHeight, 48px);
-     */
-    let wordRow = Math.floor(gridHeight/2);
-    let wordStartIndex = wordRow * gridWidth; // Word row * columns
+    let wordRow = Math.floor(randomGridInt/2);
+    let wordStartIndex = wordRow * randomGridInt; // Word row * columns
 
-    for (let i = 0; i < gridHeight * gridWidth; i++) {
+    for (let i = 0; i < randomGridInt * randomGridInt; i++) { // Appends all cells to html
         const cell = document.createElement('div');
         cell.className = 'grid-item';
-        if(i >= wordStartIndex && i < wordStartIndex + gridWidth){
+        if(i >= wordStartIndex && i < wordStartIndex + randomGridInt){
             cell.classList.add("start-word");
         }
         gridContainer.appendChild(cell);
         console.log(i);
     }
-
 }
 
 function placeWordInCenter(word) {
@@ -87,9 +64,9 @@ function placeWordInCenter(word) {
         return;
     }
 
-    const gridSize = 11; 
-    const startRow = Math.floor(gridSize / 2); 
-    const startCol = Math.floor((gridSize - word.length) / 2); 
+    const gridSize = 11;
+    const startRow = Math.floor(gridSize / 2);
+    const startCol = Math.floor((gridSize - word.length) / 2);
 
     // Get all grid cells
     const gridItems = gridContainer.querySelectorAll(".grid-item");
@@ -97,8 +74,8 @@ function placeWordInCenter(word) {
     // Place the word horizontally starting from the center
     for (let i = 0; i < word.length; i++) {
         const cellIndex = startRow * gridSize + (startCol + i);
-        gridItems[cellIndex].value = word[i]; 
-        gridItems[cellIndex].disabled = true; 
+        gridItems[cellIndex].value = word[i];
+        gridItems[cellIndex].disabled = true;
     }
 }
 
@@ -130,9 +107,3 @@ function startTimer(duration) {
 
     updateTimerDisplay();
 }
-
-
-
-
-
-

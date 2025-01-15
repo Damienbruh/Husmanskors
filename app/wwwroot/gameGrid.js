@@ -104,16 +104,16 @@ function extractWordsFromGrid() {
     }
 
     const gridItems = Array.from(gridContainer.children);
-    const gridSize = 11; // Assuming grid is 11x11
+    //const gridSize = 11; // Assuming grid is 11x11
     let words = [];
 
     const isEmpty = (cell) => !cell.querySelector('.letter');
 
     // Extract horizontal words
-    for (let row = 0; row < gridSize; row++) {
+    for (let row = 0; row < gridWidth; row++) {
         let word = '';
-        for (let col = 0; col < gridSize; col++) {
-            const cell = gridItems[row * gridSize + col];
+        for (let col = 0; col < gridHeight; col++) {
+            const cell = gridItems[row * gridHeight + col];
             const letterElement = cell.querySelector('.letter');
             if (isEmpty(cell)) {
                 if (word.length > 1) {
@@ -130,10 +130,10 @@ function extractWordsFromGrid() {
     }
 
     // Extract vertical words
-    for (let col = 0; col < gridSize; col++) {
+    for (let col = 0; col < gridWidth; col++) {
         let word = '';
-        for (let row = 0; row < gridSize; row++) {
-            const cell = gridItems[row * gridSize + col];
+        for (let row = 0; row < gridHeight; row++) {
+            const cell = gridItems[row * gridHeight + col];
             const letterElement = cell.querySelector('.letter');
             if (isEmpty(cell)) {
                 if (word.length > 1) {
@@ -153,6 +153,7 @@ function extractWordsFromGrid() {
 }
 
 async function validateAndUpdateScore() {
+    console.log("update and score called")
     const createdWords = extractWordsFromGrid().map(word => word.toLowerCase());
     console.log('Words to validate:', createdWords);
 

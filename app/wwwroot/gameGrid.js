@@ -1,22 +1,24 @@
-﻿
-let wordlength = 11; //default length of word change later!!
+﻿ //default length of word change later!!
+let gridHeight = 9; // måste vara uneven senare när vi tar in settings vid start så kan vi köra en iseven och +1 på height för att hantera 
+let gridWidth = 9;
 
 document.addEventListener("DOMContentLoaded", () => {
     createGrid(); // Initialize the grid
+    
     document.getElementById("startGame").addEventListener("click", (event) => {
         startGame(event);
     }); 
 });
 
 async function startGame(e) {
-    await placeWordInCenter(await testWord(e))
+    await placeWordInCenter(await testWord(e));
     startTimer(180);
 }
 
-async function testWord(e, length = wordlength) { 
+async function testWord(e) { 
 
     e.preventDefault(); // not reload page on form submit
-    const response = await fetch(`/new-word?length=${length.toString()}`); // get (read)
+    const response = await fetch(`/new-word?length=${gridWidth.toString()}`); // get (read)
 
     console.log('response', response);
 
@@ -25,39 +27,12 @@ async function testWord(e, length = wordlength) {
     console.log('startWord: ', startWord);
     return startWord;
 }
-
-// function createGrid() {
-//     const gridContainer = document.getElementById('gameGrid');
-//     if (!gridContainer) {
-//         console.error('No grid container found');
-//         return;
-//     }
-//
-//
-//     for (let i = 0; i < 11 * 11; i++) {
-//         const cell = document.createElement('input');
-//         cell.type = 'text';
-//         cell.maxLength = 1; // Allow one character
-//         cell.className = 'grid-item';
-//         cell.addEventListener('input', (e) => {
-//             e.target.value = e.target.value.toUpperCase();
-//         });
-//         gridContainer.appendChild(cell);
-//     }
-//
-// }
-
-
-//todo param width and height to dynamically change based on game settings
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
         console.error('No grid container found');
         return;
     }
-
-    let gridWidth = 8;
-    let gridHeight = 8;
     /*
     sätt css här dynamiskt för .grid-container
     grid-template-columns: repeat(gridWidth, 48px);
@@ -75,7 +50,6 @@ function createGrid() {
         gridContainer.appendChild(cell);
         console.log(i);
     }
-
 }
 
 
@@ -85,16 +59,9 @@ function placeWordInCenter(word) {
         console.error("Grid container not found!");
         return;
     }
-//TODO refactor for divs instead of input fields
-    const gridHeight = 11;  //handle dynamically
-    const gridWidth = 11; //handle dynamically
-    const startRow = Math.floor(gridHeight / 2); 
-    
-    const gridCells = $('#gameGrid .grid-item');
-    console.log(gridCells);
-    const startIndex = startRow * gridWidth;
     for(let i = 0; i < word.length; i++){
-        $('#gameGrid  .grid-item').eq(startIndex + i).val(word[i]);
+        const clone = $('.letterUI').find(`#${word[i]}`).clone();
+        clone.appendTo($('#gameGrid  .start-word').eq(i).empty());
     }
 }
 

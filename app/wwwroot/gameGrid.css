@@ -8,6 +8,25 @@ body {
     margin: 0;
     background-color: #f3efe0;
 }
+header{
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    color: white; /* Make text white */
+    position: fixed; /* Fix the header at the top */
+    top: 0; /* Ensure it sticks to the top */
+    width: 100%; /* Make the header span the full width */
+    padding: 1rem 0; /* Optional: Add some padding for aesthetics */
+}
+
+
+main{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 60px; /* Adjust this to match the header's height */
+}
+
 
 .game-container {
     text-align: center;

@@ -1,6 +1,5 @@
-﻿
-let wordlength = 11; //default length of word change later!!
-
+﻿let wordlength = 11; //default length of word change later!!
+let countdown;
 document.addEventListener("DOMContentLoaded", () => {
     createGrid(); // Initialize the grid
     document.getElementById("startGame").addEventListener("click", (event) => {
@@ -10,8 +9,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function startGame(e) {
     await placeWordInCenter(await testWord(e))
+   
     startTimer(180);
 }
+
 
 async function testWord(e, length = wordlength) { 
 
@@ -99,21 +100,26 @@ function placeWordInCenter(word) {
 }
 
 function startTimer(duration) {
-    const timerElement = document.getElementById('timer');
+    const timerElement = document.getElementById('timer'); 
     if (!timerElement) {
         console.error("Timer element not found!");
         return;
     }
 
-    let remainingTime = duration;
+    let remainingTime = duration; 
+
+    if (countdown) {
+        clearInterval(countdown);
+    }
 
     const updateTimerDisplay = () => {
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
-        timerElement.textContent = `Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     };
+    updateTimerDisplay();
 
-    const countdown = setInterval(() => {
+    countdown = setInterval(() => {
         if (remainingTime <= 0) {
             clearInterval(countdown);
             timerElement.textContent = "Time's Up!";
@@ -123,8 +129,6 @@ function startTimer(duration) {
             updateTimerDisplay();
         }
     }, 1000);
-
-    updateTimerDisplay();
 }
 
 

@@ -2,6 +2,7 @@
 const roundTimeInputE = document.getElementById('round-time');
 const numberOfRoundsInputE = document.getElementById('number-of-rounds');
 const extraPointsCheckboxE = document.getElementById('extra-points');
+const wordLengthInputE = document.getElementById('word-length');
 
 
 //Just nu bara ger den logs i consolen för inputsen man gör i menyn
@@ -11,11 +12,13 @@ const extraPointsCheckboxE = document.getElementById('extra-points');
 let roundTimeInput = 40;          // round-time
 let numberOfRoundsInput = 2;      // number-of-rounds
 let extraPointsCheckbox = false; // Boolean extra-points
+let wordLengthInput = 11; // word-length
 
 const defaultSettings = {
     roundTimeInput,
     numberOfRoundsInput,
-    extraPointsCheckbox
+    extraPointsCheckbox,
+    wordLengthInput
 };
 
 roundTimeInputE.addEventListener('input', function (event) {
@@ -31,6 +34,12 @@ numberOfRoundsInputE.addEventListener('input', function (event) {
     defaultSettings[1] = numberOfRoundsInput
     console.log('Antal Rundor:', defaultSettings)
 });
+
+// Addat ordlängd funktion
+wordLengthInputE.addEventListener('input', function (event) { 
+    wordLengthInput = parseInt(event.target.value); 
+    defaultSettings[2] = wordLengthInput; 
+    console.log('Ord Längd:', defaultSettings); });
 
 extraPointsCheckboxE.addEventListener('change', function (event) {
     //** Koden går här för att modiferar default settingsarna

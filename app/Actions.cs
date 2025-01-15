@@ -218,6 +218,28 @@ public class Actions
     }
 
 
+    //Metod för att hämta spelinställningar
+    
+    public async Task<DefaultSettings> GetGameSettings(int gameId)
+    {
+        await using var cmd = _db.CreateCommand("SELECT round_time, number_of_rounds, word_length, extra_points FROM game_settings WHERE game_id = $1");
+        cmd.Parameters.AddWithValue(gameId);
+        await using var reader = await cmd.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            return new DefaultSettings(
+                reader.GetInt32(0),
+                reader.GetInt32(1),
+                reader.GetInt32(2),  //Lägg till ordlängd
+                reader.GetBoolean(3)
+            );
+        }
+
+        return null;
+    }
+
+    
         
         
 }

@@ -17,6 +17,17 @@ async function startGame(e) {
     startTimer(180);
 }
 
+//lagt till funktion för att hitta inställningar
+async function getGameSettings() { 
+    const response = await fetch('/get-game-settings', { 
+        method: 'GET', 
+        headers: { 'Content-Type': 'application/json' } 
+    }); 
+    return await response.json(); 
+}
+
+
+
 async function testWord(e) { 
 
     e.preventDefault(); // not reload page on form submit

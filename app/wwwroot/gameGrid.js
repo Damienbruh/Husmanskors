@@ -116,6 +116,113 @@ function startTimer(duration) {
 
 
 
+function extractWordsFromGrid() {
+    const gridContainer = document.getElementById('gameGrid');
+    if (!gridContainer) {
+        console.error("Grid container not found!");
+        return [];
+    }
+
+    const gridItems = Array.from(gridContainer.children);
+    const gridSize = 11; // Assuming grid is 11x11
+    let words = [];
+
+    const isEmpty = (cell) => !cell.querySelector('.letter');
+
+    // Extract horizontal words
+    for (let row = 0; row < gridSize; row++) {
+        let word = '';
+        for (let col = 0; col < gridSize; col++) {
+            const cell = gridItems[row * gridSize + col];
+            const letterElement = cell.querySelector('.letter');
+            if (isEmpty(cell)) {
+                if (word.length > 1) {
+                    words.push(word);
+                }
+                word = '';
+            } else {
+                word += letterElement.textContent.trim();
+            }
+        }
+        if (word.length > 1) {
+            words.push(word);
+        }
+    }
+
+    // Extract vertical words
+    for (let col = 0; col < gridSize; col++) {
+        let word = '';
+        for (let row = 0; row < gridSize; row++) {
+            const cell = gridItems[row * gridSize + col];
+            const letterElement = cell.querySelector('.letter');
+            if (isEmpty(cell)) {
+                if (word.length > 1) {
+                    words.push(word);
+                }
+                word = '';
+            } else {
+                word += letterElement.textContent.trim();
+            }
+        }
+        if (word.length > 1) {
+            words.push(word);
+        }
+    }
+
+    return words;
+}
+
+async function validateAndUpdateScore() {
+    const createdWords = extractWordsFromGrid().map(word => word.toLowerCase());
+    console.log('Words to validate:', createdWords);
+
+    const response = await fetch('/validate-words', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ words: createdWords })
+    });
+
+    const validationResult = await response.json();
+    console.log('Validation Result:', validationResult);
+
+    if (validationResult.valid) {
+        console.log('All words are valid. Updating score...');
+        updateScore(createdWords); // Uppdatera poängen endast om alla ord är giltiga
+    } else {
+        console.log('Some words are invalid:', validationResult.invalidWords);
+    }
+}
+
+function updateScore(validWords) {
+    let totalScore = 0;
+
+    validWords.forEach(word => {
+        console.log('Calculating score for word:', word);
+        for (const letter of word) {
+            const score = getScoreForLetter(letter);
+            console.log(`Letter: ${letter}, Score: ${score}`);
+            totalScore += score;
+        }
+    });
+
+    const scoreDisplay = document.getElementById('current-score');
+    if (scoreDisplay) {
+        scoreDisplay.textContent = totalScore;
+        console.log('Updated score:', totalScore);
+    } else {
+        console.error('Score display element not found!');
+    }
+}
+
+function getScoreForLetter(letter) {
+    const letterScores = {
+        'a': 1, 'b': 4, 'c': 10, 'd': 2, 'e': 1, 'f': 4, 'g': 3, 'h': 3, 'i': 1, 'j': 8, 'k': 3, 'l': 2,
+        'm': 3, 'n': 1, 'o': 1, 'p': 4, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 3, 'v': 4, 'w': 10, 'x': 10,
+        'y': 10, 'z': 10, 'å': 7, 'ä': 7, 'ö': 7
+    };
+    return letterScores[letter.toLowerCase()] || 0;
+}
+
 
 
 

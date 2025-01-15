@@ -189,6 +189,37 @@ class Program
         }
         
         
+        app.MapPost("/validate-words", async (HttpContext context) =>
+        {
+            var requestBody = await context.Request.ReadFromJsonAsync<WordValidationRequest>();
+            if (requestBody?.Words == null || requestBody.Words.Count == 0)
+            {
+                return Results.BadRequest("No words to validate.");
+            }
+
+            var validWords = new List<string>();
+            var invalidWords = new List<string>();
+
+            foreach (var word in requestBody.Words)
+            {
+                var isValid = await actions.IsValidWord(word);
+                if (isValid)
+                {
+                    validWords.Add(word);
+                }
+                else
+                {
+                    invalidWords.Add(word);
+                }
+            }
+
+            return Results.Ok(new { valid = invalidWords.Count == 0, invalidWords });
+        });
+
+        
+        
+        
+        
         
         app.Run(); //startar servern 
         

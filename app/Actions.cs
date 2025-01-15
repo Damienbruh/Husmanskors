@@ -207,6 +207,19 @@ public class Actions
 
             return result?.ToString() ?? "";
         }
+        
+        
+        public async Task<bool> IsValidWord(string word)
+        {
+            await using var cmd = _db.CreateCommand("SELECT COUNT(*) FROM dictionary WHERE LOWER(word) = LOWER($1)");
+            cmd.Parameters.AddWithValue(word);
+            var result = await cmd.ExecuteScalarAsync();
+            return (long)result > 0;
+        }
+
+
+        
+        
     }
 
 

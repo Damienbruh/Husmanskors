@@ -6,26 +6,33 @@ tile.hover(function(){
     $(this).animate({"background-color": "#faebd7"}, {queue: false, duration: 200});
 });
 
-$( function() {
+$(function() {
     tile.draggable();
-    
-    
-        $(".grid-item").droppable({
-            drop: function( event, ui ) {
-                if($(this).children().length < 1){
-                    const clone = $(ui.draggable).clone().appendTo($(this));
-                    clone.css({"top":"", "left":"", "background-color": "#faebd7", "border": "1px solid"});
-                    clone.addClass("placed-tile");
-                }
-                else{
-                    $(ui.draggable).animate({"background-color": "#cd5c5c"}, {queue: true, duration: 10});
-                    $(ui.draggable).animate({"background-color": "#faebd7"}, {queue: true, duration: 500});
-                }
-                
+
+    $(".grid-item").droppable({
+        drop: async function(event, ui) {
+            if ($(this).children().length < 1) {
+                const clone = $(ui.draggable).clone().appendTo($(this));
+                clone.css({"top":"", "left":"", "background-color": "#faebd7", "border": "1px solid"});
+                clone.addClass("placed-tile");
+                await validateAndUpdateScore(); // Validera och uppdatera poäng när en tile placeras
+            } else {
+                $(ui.draggable).animate({"background-color": "#cd5c5c"}, {queue: true, duration: 10});
+                $(ui.draggable).animate({"background-color": "#faebd7"}, {queue: true, duration: 500});
             }
-        });
-    
-} );
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('.grid-item').on('dblclick', async function() {
+        if ($(this).children('.placed-tile').length > 0) {
+            $(this).children('.placed-tile').remove();
+            await validateAndUpdateScore(); // Validera och uppdatera poäng när en tile tas bort
+        }
+    });
+});
+
 
 tile.mouseup(function() {
     tile.animate({"top":"", "left":""}, {queue: false});

@@ -43,3 +43,12 @@
     border-color: #007bff;
     box-shadow: 0 0 5px #007bff;
 }
+
+/*Show points*/
+.score-container { 
+    margin-top: 20px; 
+} 
+#current-score { 
+    font-size: 24px; 
+    font-weight: bold; 
+}

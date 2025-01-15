@@ -56,11 +56,24 @@ function createGrid() {
         return;
     }
 
+    let gridWidth = 8;
+    let gridHeight = 8;
+    /*
+    sätt css här dynamiskt för .grid-container
+    grid-template-columns: repeat(gridWidth, 48px);
+    grid-template-rows: repeat(gridHeight, 48px);
+     */
+    let wordRow = Math.floor(gridHeight/2);
+    let wordStartIndex = wordRow * gridWidth; // Word row * columns
 
-    for (let i = 0; i < 11 * 11; i++) {
+    for (let i = 0; i < gridHeight * gridWidth; i++) {
         const cell = document.createElement('div');
         cell.className = 'grid-item';
+        if(i >= wordStartIndex && i < wordStartIndex + gridWidth){
+            cell.classList.add("start-word");
+        }
         gridContainer.appendChild(cell);
+        console.log(i);
     }
 
 }

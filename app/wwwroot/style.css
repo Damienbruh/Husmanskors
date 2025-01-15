@@ -87,3 +87,27 @@ input[type="text"] {
 #forfeitRound:hover {
     background-color: #FF4500; /* OrangeRed-färg */
 }
+
+
+
+/* Create or connect to lobby button container */
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #7fefbd;
+    border-radius: 10%;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 200px;
+    margin: 10px;
+}
+
+button:hover {
+    background-color: #5fc89d;
+}

@@ -217,7 +217,26 @@ class Program
         });
 
         
-        
+        app.MapPost("/create-lobby", async (HttpContext context) => 
+        {
+            var clientId = context.Request.Cookies["ClientId"];
+            var (success, game) = await actions.NewSession(clientId);
+            return success ? Results.Ok(game) : Results.StatusCode(500);
+        });
+
+        app.MapPost("/connect-lobby", async (HttpContext context) => 
+        {
+            var requestBody = await context.Request.ReadFromJsonAsync<JoinSession>();
+            if (requestBody?.GameCode is null)
+            {
+                return Results.BadRequest("GameCode is required.");
+            }
+
+            var clientId = context.Request.Cookies["ClientId"];
+            var (success, game) = await actions.JoinSessionViaCode(clientId, requestBody.GameCode);
+            return success ? Results.Ok(game) : Results.StatusCode(500);
+        });
+
         
         
         

@@ -1,8 +1,19 @@
 ﻿let min = 5;
 let max = 15;
-let randomGridInt = Math.floor(Math.random() * (max - min + 1)) + min; // Generates random int value
+
+function getRandomInt(min, max) {
+    let randomGridInt = Math.floor(Math.random() * (max - min + 1)) + min; // Generates random int value
+    if (randomGridInt % 2 === 0) {
+        randomGridInt += 1;
+        if (randomGridInt > max) randomGridInt -= 2;
+    }
+    return randomGridInt;
+}
+
+let randomGridInt = getRandomInt(min, max);
 
 console.log(`Random generated number for grid: ${randomGridInt}`);
+
 
 document.addEventListener("DOMContentLoaded", () => {
     createGrid(); // Initialize the grid
@@ -33,28 +44,54 @@ async function testWord(e) {
     $('#message').text(word + (data ? ' finns ' : ' finns inte ') + ' i databasen')
 }
 
+// function createGrid() {
+//     const gridContainer = document.getElementById('gameGrid');
+//     if (!gridContainer) {
+//         console.error('No grid container found');
+//         return;
+//     }
+//
+//
+//     for (let i = 0; i < 11 * 11; i++) {
+//         const cell = document.createElement('input');
+//         cell.type = 'text';
+//         cell.maxLength = 1; // Allow one character
+//         cell.className = 'grid-item';
+//         cell.addEventListener('input', (e) => {
+//             e.target.value = e.target.value.toUpperCase();
+//         });
+//         gridContainer.appendChild(cell);
+//     }
+//
+// }
+
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
         console.error('No grid container found');
         return;
     }
-    
+
+    let gridWidth = randomGridInt;
+    let gridHeight = randomGridInt;
+
+    gridContainer.innerHTML = ''; // Clears the grid
     gridContainer.style.gridTemplateColumns = `repeat(${randomGridInt}, 40px)`; // Sets the style for the grid rows/ columns
     gridContainer.style.gridTemplateRows = `repeat(${randomGridInt}, 40px)`;
+    
+    let wordRow = Math.floor(gridHeight/2);
+    let wordStartIndex = wordRow * gridWidth; // Word row * columns
 
-    let wordRow = Math.floor(randomGridInt/2);
-    let wordStartIndex = wordRow * randomGridInt; // Word row * columns
-
-    for (let i = 0; i < randomGridInt * randomGridInt; i++) { // Appends all cells to html
+    for (let i = 0; i < gridHeight * gridWidth; i++) {
         const cell = document.createElement('div');
         cell.className = 'grid-item';
-        if(i >= wordStartIndex && i < wordStartIndex + randomGridInt){
+        if(i >= wordStartIndex && i < wordStartIndex + gridWidth){
             cell.classList.add("start-word");
         }
         gridContainer.appendChild(cell);
         console.log(i);
     }
+
 }
 
 function placeWordInCenter(word) {
@@ -107,3 +144,9 @@ function startTimer(duration) {
 
     updateTimerDisplay();
 }
+
+
+
+
+
+

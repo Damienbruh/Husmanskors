@@ -1,70 +1,32 @@
-﻿let min = 5;
-let max = 15;
-
-function getRandomInt(min, max) {
-    let randomGridInt = Math.floor(Math.random() * (max - min + 1)) + min; // Generates random int value
-    if (randomGridInt % 2 === 0) {
-        randomGridInt += 1;
-        if (randomGridInt > max) randomGridInt -= 2;
-    }
-    return randomGridInt;
-}
-
-let randomGridInt = getRandomInt(min, max);
-
-console.log(`Random generated number for grid: ${randomGridInt}`);
-
+ //default length of word change later!!
+let gridHeight = 9; // måste vara uneven senare när vi tar in settings vid start så kan vi köra en iseven och +1 på height för att hantera 
+let gridWidth = 9;
 
 document.addEventListener("DOMContentLoaded", () => {
     createGrid(); // Initialize the grid
-    document.getElementById("startGame").addEventListener("click", startGame);
+    
+    document.getElementById("startGame").addEventListener("click", (event) => {
+        startGame(event);
+    }); 
 });
 
-async function startGame() {
-    placeWordInCenter(testWord)
+async function startGame(e) {
+    await placeWordInCenter(await testWord(e));
     startTimer(180);
 }
 
-async function testWord(e) {
+async function testWord(e) { 
 
     e.preventDefault(); // not reload page on form submit
-
-    const word = $('[name="word"]').val();
-
-    console.log('word', word);
-
-    const response = await fetch('/new-word' + word); // get (read)
+    const response = await fetch(`/new-word?length=${gridWidth.toString()}`); // get (read)
 
     console.log('response', response);
 
-    const data = await response.json();
+    const startWord = await response.text();
 
-    console.log('data', data);
-
-    $('#message').text(word + (data ? ' finns ' : ' finns inte ') + ' i databasen')
+    console.log('startWord: ', startWord);
+    return startWord;
 }
-
-// function createGrid() {
-//     const gridContainer = document.getElementById('gameGrid');
-//     if (!gridContainer) {
-//         console.error('No grid container found');
-//         return;
-//     }
-//
-//
-//     for (let i = 0; i < 11 * 11; i++) {
-//         const cell = document.createElement('input');
-//         cell.type = 'text';
-//         cell.maxLength = 1; // Allow one character
-//         cell.className = 'grid-item';
-//         cell.addEventListener('input', (e) => {
-//             e.target.value = e.target.value.toUpperCase();
-//         });
-//         gridContainer.appendChild(cell);
-//     }
-//
-// }
-
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
@@ -72,12 +34,10 @@ function createGrid() {
         return;
     }
 
-    let gridWidth = randomGridInt;
-    let gridHeight = randomGridInt;
-
+   
     gridContainer.innerHTML = ''; // Clears the grid
-    gridContainer.style.gridTemplateColumns = `repeat(${randomGridInt}, 40px)`; // Sets the style for the grid rows/ columns
-    gridContainer.style.gridTemplateRows = `repeat(${randomGridInt}, 40px)`;
+    gridContainer.style.gridTemplateColumns = `repeat(${gridWidth}, 40px)`; // Sets the style for the grid rows/ columns
+    gridContainer.style.gridTemplateRows = `repeat(${gridHeight}, 40px)`;
     
     let wordRow = Math.floor(gridHeight/2);
     let wordStartIndex = wordRow * gridWidth; // Word row * columns
@@ -91,8 +51,8 @@ function createGrid() {
         gridContainer.appendChild(cell);
         console.log(i);
     }
-
 }
+
 
 function placeWordInCenter(word) {
     const gridContainer = document.getElementById("gameGrid");
@@ -100,19 +60,9 @@ function placeWordInCenter(word) {
         console.error("Grid container not found!");
         return;
     }
-
-    const gridSize = 11;
-    const startRow = Math.floor(gridSize / 2);
-    const startCol = Math.floor((gridSize - word.length) / 2);
-
-    // Get all grid cells
-    const gridItems = gridContainer.querySelectorAll(".grid-item");
-
-    // Place the word horizontally starting from the center
-    for (let i = 0; i < word.length; i++) {
-        const cellIndex = startRow * gridSize + (startCol + i);
-        gridItems[cellIndex].value = word[i];
-        gridItems[cellIndex].disabled = true;
+    for(let i = 0; i < word.length; i++){
+        const clone = $('.letterUI').find(`#${word[i]}`).clone();
+        clone.appendTo($('#gameGrid  .start-word').eq(i).empty());
     }
 }
 
@@ -146,6 +96,114 @@ function startTimer(duration) {
 }
 
 
+
+function extractWordsFromGrid() {
+    const gridContainer = document.getElementById('gameGrid');
+    if (!gridContainer) {
+        console.error("Grid container not found!");
+        return [];
+    }
+
+    const gridItems = Array.from(gridContainer.children);
+    //const gridSize = 11; // Assuming grid is 11x11
+    let words = [];
+
+    const isEmpty = (cell) => !cell.querySelector('.letter');
+
+    // Extract horizontal words
+    for (let row = 0; row < gridWidth; row++) {
+        let word = '';
+        for (let col = 0; col < gridHeight; col++) {
+            const cell = gridItems[row * gridHeight + col];
+            const letterElement = cell.querySelector('.letter');
+            if (isEmpty(cell)) {
+                if (word.length > 1) {
+                    words.push(word);
+                }
+                word = '';
+            } else {
+                word += letterElement.textContent.trim();
+            }
+        }
+        if (word.length > 1) {
+            words.push(word);
+        }
+    }
+
+    // Extract vertical words
+    for (let col = 0; col < gridWidth; col++) {
+        let word = '';
+        for (let row = 0; row < gridHeight; row++) {
+            const cell = gridItems[row * gridHeight + col];
+            const letterElement = cell.querySelector('.letter');
+            if (isEmpty(cell)) {
+                if (word.length > 1) {
+                    words.push(word);
+                }
+                word = '';
+            } else {
+                word += letterElement.textContent.trim();
+            }
+        }
+        if (word.length > 1) {
+            words.push(word);
+        }
+    }
+
+    return words;
+}
+
+async function validateAndUpdateScore() {
+    console.log("update and score called")
+    const createdWords = extractWordsFromGrid().map(word => word.toLowerCase());
+    console.log('Words to validate:', createdWords);
+
+    const response = await fetch('/validate-words', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ words: createdWords })
+    });
+
+    const validationResult = await response.json();
+    console.log('Validation Result:', validationResult);
+
+    if (validationResult.valid) {
+        console.log('All words are valid. Updating score...');
+        updateScore(createdWords); // Uppdatera poängen endast om alla ord är giltiga
+    } else {
+        console.log('Some words are invalid:', validationResult.invalidWords);
+    }
+}
+
+function updateScore(validWords) {
+    let totalScore = 0;
+
+    validWords.forEach(word => {
+        console.log('Calculating score for word:', word);
+        for (const letter of word) {
+            const score = getScoreForLetter(letter);
+            console.log(`Letter: ${letter}, Score: ${score}`);
+            totalScore += score;
+        }
+    });
+
+    const scoreDisplay = document.getElementById('current-score');
+    if (scoreDisplay) {
+        scoreDisplay.textContent = totalScore;
+        console.log('Updated score:', totalScore);
+    } else {
+        console.error('Score display element not found!');
+    }
+}
+
+function getScoreForLetter(letter) {
+    const letterScores = {
+        'a': 1, 'b': 4, 'c': 10, 'd': 2, 'e': 1, 'f': 4, 'g': 3, 'h': 3, 'i': 1, 'j': 8, 'k': 3, 'l': 2,
+        'm': 3, 'n': 1, 'o': 1, 'p': 4, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 3, 'v': 4, 'w': 10, 'x': 10,
+        'y': 10, 'z': 10, 'å': 7, 'ä': 7, 'ö': 7
+    };
+    return letterScores[letter.toLowerCase()] || 0;
+}
 
 
 

@@ -34,6 +34,7 @@ $(document).ready(function() {
 });
 
 
+
 tile.mouseup(function() {
     tile.animate({"top":"", "left":""}, {queue: false});
 })

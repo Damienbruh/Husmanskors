@@ -1,11 +1,12 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Oswald:wght@200..700&display=swap');
+body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f8f8f8;
+    background-color: #f3efe0;
 }
 
 .game-container {
@@ -14,8 +15,12 @@
     top: 4vw;
 }
 
+
 .timer {
+    font-family: 'Oswald', Serif;
     text-align: center;
+    font-size: 3vw;
+    
 }
 
 .grid-container {
@@ -23,14 +28,13 @@
     grid-template-columns: repeat(8, 48px);
     grid-template-rows: repeat(8, 48px);
     gap: 0;
-    border: 0px solid black;
 }
 
 .grid-item {
     width: 48px;
     height: 48px;
     background-color: #fff;
-    border:2px solid black;
+    border:6px solid black;
     text-align: center;
     vertical-align: middle;
     font-size: 20px;

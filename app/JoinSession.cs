@@ -9,5 +9,6 @@ public record JoinSession(
 public record DefaultSettings(
     int roundTimeInput,
     int numberOfRoundsInput,
+    int wordLengthInput, //la till parametern för wordlength
     bool extraPointsCheckbox
     );

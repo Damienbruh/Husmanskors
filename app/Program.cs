@@ -237,6 +237,23 @@ class Program
             return success ? Results.Ok(game) : Results.StatusCode(500);
         });
 
+
+        
+        // Endpoint för att hämta spelinställningar
+        app.MapGet("/get-game-settings", async (HttpContext context) =>
+        {
+            var gameIdStr = context.Request.Query["gameId"];
+            if (int.TryParse(gameIdStr, out int gameId))
+            {
+                var settings = await actions.GetGameSettings(gameId);
+                return settings != null ? Results.Ok(settings) : Results.StatusCode(500);
+            }
+            else
+            {
+                return Results.BadRequest("Ogiltigt spel-ID.");
+            }
+        });
+
         
         
         

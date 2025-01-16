@@ -1,34 +1,34 @@
-let wordlength = 11; //default length of word change later!!
-let countdown;
- //default length of word change later!!
-let gridHeight = 9; // måste vara uneven senare när vi tar in settings vid start så kan vi köra en iseven och +1 på height för att hantera 
+﻿let countdown;
+let gridHeight = 9;
 let gridWidth = 9;
+
+const tile = $(".letterUI > * > .tile")
 
 document.addEventListener("DOMContentLoaded", () => {
     createGrid(); // Initialize the grid
-    
+
     document.getElementById("startGame").addEventListener("click", (event) => {
         startGame(event);
-    }); 
+    });
 });
+
 
 async function startGame(e) {
     await placeWordInCenter(await testWord(e));
     startTimer(180);
 }
 
-//lagt till funktion för att hitta inställningar
-async function getGameSettings() { 
-    const response = await fetch('/get-game-settings', { 
-        method: 'GET', 
-        headers: { 'Content-Type': 'application/json' } 
-    }); 
-    return await response.json(); 
+
+async function getGameSettings() {
+    const response = await fetch('/get-game-settings', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    });
+    return await response.json();
 }
 
 
-
-async function testWord(e) { 
+async function testWord(e) {
 
     e.preventDefault(); // not reload page on form submit
     const response = await fetch(`/new-word?length=${gridWidth.toString()}`); // get (read)
@@ -40,6 +40,8 @@ async function testWord(e) {
     console.log('startWord: ', startWord);
     return startWord;
 }
+
+
 function createGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
@@ -47,13 +49,13 @@ function createGrid() {
         return;
     }
 
-   
-    gridContainer.innerHTML = ''; // Clears the grid
-    gridContainer.style.gridTemplateColumns = `repeat(${gridWidth}, 40px)`; // Sets the style for the grid rows/ columns
+
+    gridContainer.innerHTML = '';
+    gridContainer.style.gridTemplateColumns = `repeat(${gridWidth}, 40px)`;
     gridContainer.style.gridTemplateRows = `repeat(${gridHeight}, 40px)`;
-    
+
     let wordRow = Math.floor(gridHeight/2);
-    let wordStartIndex = wordRow * gridWidth; // Word row * columns
+    let wordStartIndex = wordRow * gridWidth;
 
     for (let i = 0; i < gridHeight * gridWidth; i++) {
         const cell = document.createElement('div');
@@ -79,14 +81,15 @@ function placeWordInCenter(word) {
     }
 }
 
+
 function startTimer(duration) {
-    const timerElement = document.getElementById('timer'); 
+    const timerElement = document.getElementById('timer');
     if (!timerElement) {
         console.error("Timer element not found!");
         return;
     }
 
-    let remainingTime = duration; 
+    let remainingTime = duration;
 
     if (countdown) {
         clearInterval(countdown);
@@ -112,7 +115,6 @@ function startTimer(duration) {
 }
 
 
-
 function extractWordsFromGrid() {
     const gridContainer = document.getElementById('gameGrid');
     if (!gridContainer) {
@@ -121,7 +123,6 @@ function extractWordsFromGrid() {
     }
 
     const gridItems = Array.from(gridContainer.children);
-    //const gridSize = 11; // Assuming grid is 11x11
     let words = [];
 
     const isEmpty = (cell) => !cell.querySelector('.letter');
@@ -169,6 +170,7 @@ function extractWordsFromGrid() {
     return words;
 }
 
+
 async function validateAndUpdateScore() {
     console.log("update and score called")
     const createdWords = extractWordsFromGrid().map(word => word.toLowerCase());
@@ -191,6 +193,7 @@ async function validateAndUpdateScore() {
     }
 }
 
+
 function updateScore(validWords) {
     let totalScore = 0;
 
@@ -212,6 +215,7 @@ function updateScore(validWords) {
     }
 }
 
+
 function getScoreForLetter(letter) {
     const letterScores = {
         'a': 1, 'b': 4, 'c': 10, 'd': 2, 'e': 1, 'f': 4, 'g': 3, 'h': 3, 'i': 1, 'j': 8, 'k': 3, 'l': 2,
@@ -221,6 +225,50 @@ function getScoreForLetter(letter) {
     return letterScores[letter.toLowerCase()] || 0;
 }
 
+tile.hover(function(){
+    $(this).animate({"background-color": "#ffdead"}, {queue: false, duration: 200});
+}, function(){
+    $(this).animate({"background-color": "#faebd7"}, {queue: false, duration: 200});
+});
 
+$(function() {
+    tile.draggable();
+    $(".grid-item").droppable({
+        drop: async function(event, ui) {
+            if ($(this).children().length < 1) {
+                const clone = $(ui.draggable).clone().appendTo($(this));
+                clone.css({"top":"", "left":"", "background-color": "#faebd7", "border": "1px solid"});
+                clone.addClass("placed-tile");
+            } else {
+                $(ui.draggable).animate({"background-color": "#cd5c5c"}, {queue: true, duration: 10});
+                $(ui.draggable).animate({"background-color": "#faebd7"}, {queue: true, duration: 500});
+            }
+            console.log("before call update and score 1")
+            await validateAndUpdateScore(); // Validera och uppdatera poäng när en tile placeras
+        }
+    });
+});
 
+$(document).ready(function() {
+    $('.grid-item').on('dblclick', async function() {
+        if ($(this).children('.placed-tile').length > 0) {
+            $(this).children('.placed-tile').remove();
+            console.log("before call update and  2")
+            await validateAndUpdateScore(); // Validera och uppdatera poäng när en tile tas bort
+        }
+    });
+});
 
+tile.mouseup(function() {
+    tile.animate({"top":"", "left":""}, {queue: false});
+})
+
+// Add event listener for double-click to remove a placed tile
+$(document).ready(function() {
+    $('.grid-item').on('dblclick', function() {
+        // Check if there's a placed tile
+        if ($(this).children('.placed-tile').length > 0) {
+            $(this).children('.placed-tile').remove(); // Remove the placed tile
+        }
+    });
+});

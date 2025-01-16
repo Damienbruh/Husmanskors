@@ -1,15 +1,18 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 body{
     background-color: #f3efe0;
     font-family: 'Roboto', sans-serif;
     padding: 0;
     margin: 0;
 }
+
 header{
     display: flex;
     justify-content: center;
     background-color: black;
 }
+
 header>h1{
     color: white;
 }
@@ -19,23 +22,28 @@ header>h1{
     padding-left: 30px;
     padding-right: 30px;
 }
+
 label {
     margin-right: 10px;
 }
+
 .input-group {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 }
+
 input[type="text"], input[type="number"] {
     width: 150px;
     padding: 5px;
     margin-left: 10px;
 }
+
 .divider {
     border-top: 1px solid gray;
     margin: 20px 0;
 }
+
 .buttonDiv{
     display: flex;
     justify-content: space-evenly;

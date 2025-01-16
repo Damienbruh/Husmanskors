@@ -1,7 +1,10 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Oswald:wght@200..700&display=swap');
+
+
 * {
     box-sizing: border-box;
 }
+
 
 body {
     font-family: Arial, sans-serif;
@@ -12,15 +15,17 @@ body {
     margin: 0;
     background-color: #f3efe0;
 }
+
+
 header{
     display: flex;
     justify-content: center;
     background-color: black;
-    color: white; /* Make text white */
-    position: fixed; /* Fix the header at the top */
-    top: 0; /* Ensure it sticks to the top */
-    width: 100%; /* Make the header span the full width */
-    padding: 1rem 0; /* Optional: Add some padding for aesthetics */
+    color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1rem 0;
 }
 
 
@@ -28,7 +33,7 @@ main{
     display: flex;
     justify-content: center;
     align-content: center;
-    margin-top: 60px; /* Adjust this to match the header's height */
+    margin-top: 60px;
 }
 
 
@@ -43,15 +48,15 @@ main{
     font-family: 'Oswald', Serif;
     text-align: center;
     font-size: 3vw;
-    
+
 }
+
 
 .grid-container {
     display: grid;
-    /*grid-template-columns: repeat(9, 48px);*/
-    /*grid-template-rows: repeat(9, 48px);*/
     gap: 0;
 }
+
 
 .grid-item {
     width: 48px;
@@ -66,20 +71,68 @@ main{
     outline: none;
 }
 
+
 .grid-item>.tile{
     border: none;
 }
+
 
 .grid-item:focus {
     border-color: #007bff;
     box-shadow: 0 0 5px #007bff;
 }
 
-/*Show points*/
-.score-container { 
-    margin-top: 20px; 
-} 
-#current-score { 
-    font-size: 24px; 
-    font-weight: bold; 
+
+.score-container {
+    margin-top: 20px;
+}
+
+
+#current-score {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.tile {
+    background-color: antiquewhite;
+    border: 1px solid black;
+    margin: auto;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    cursor: pointer;
+}
+
+.letterUI {
+    display: grid;
+    position: absolute;
+    margin-top: 39%;
+    row-gap: 10px;
+}
+
+.topRow{
+    display: grid;
+    grid-template-columns: 1fr repeat(15, 50px) 1fr;
+    column-gap: 10px;
+}
+
+.bottomRow{
+    display: grid;
+    grid-template-columns: 1fr repeat(14, 50px) 1fr;
+    column-gap: 10px;
+}
+
+h1{
+    text-align: center;
+    font-size: 35px;
+    margin: auto;
+    margin-top: 5px;
+    font-family: Inter;
+}
+
+h2{
+    position: absolute;
+    font-family: Inter;
+    font-size: 14px;
+    margin: auto;
 }

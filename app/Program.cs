@@ -52,6 +52,7 @@ class Program
             await next();
         });
 
+        
         // Helper function to generate a unique client ID
         static string GenerateUniqueClientId()
         {
@@ -60,17 +61,8 @@ class Program
             rng.GetBytes(bytes);
             return Convert.ToBase64String(bytes).TrimEnd('=');
         }
-
-        // methods for proccessing posts and gets
-
         
-        /*
-         * todo
-         * behöver kunna hantera ifall en spelare är connected eller ej, ifall en spelare försöker öppna ny lobby medans i en lobby
-         * att en spelare disconnectar från en lobby
-         * ta bort ett game om alla disconnectar i lobby state, byta state till ended ifall alla lämnar medans state är active.
-         * tracka winner i db
-         */
+        
         app.MapPost("/join-session", async (HttpContext context) =>  // hanterar join och create session
         {
             var requestBody = await context.Request.ReadFromJsonAsync<JoinSession>();
@@ -105,7 +97,6 @@ class Program
         });
         
         
-        
         app.MapPost("/changeName", async (HttpContext context) =>
         {
             // Player here, is a class that defines the post requestBody format
@@ -118,8 +109,6 @@ class Program
             Users user = await actions.AddPlayer(context.Request.Cookies["ClientId"] ?? context.Items["ClientId"]?.ToString(), requestBody.name);
             return Results.Ok(user); // needs Results.StatusCode(500) if query for db fails
         });
-        
-        
         
         
         app.MapGet("/game-status", async (HttpContext context) => 
@@ -136,6 +125,7 @@ class Program
             }
         });
 
+        
         app.MapPost("/disconnect", async (HttpContext context) => 
         {
             var gameIdStr = context.Request.Query["gameId"];
@@ -150,7 +140,6 @@ class Program
                 return Results.BadRequest("Ogiltigt spel-ID.");
             }
         });
-
         
 
         app.MapPost("/forfeit-round", async (HttpContext context) => 
@@ -169,26 +158,20 @@ class Program
         });
 
         
-        
+        app.MapGet("/new-word", async (HttpContext context) =>
         {
+            Int32 wordLength = Int32.Parse(context.Request.Query["length"]);
 
-            app.MapGet("/new-word", async (HttpContext context) =>
-            {
-                Int32 wordLength = Int32.Parse(context.Request.Query["length"]);
+            string word = await actions.GetWord(wordLength);
 
-                string word = await actions.GetWord(wordLength);
+            return word;
+            //return String.IsNullOrEmpty(word) ? Results.BadRequest("cannot find a word") : word; silly me
+            //bool success = await actions.GetWord(word: requestBody.Word);
 
-                return word;
-                //return String.IsNullOrEmpty(word) ? Results.BadRequest("cannot find a word") : word; silly me
-                //bool success = await actions.GetWord(word: requestBody.Word);
+            //return success ? Results.Ok("Word added successfully.") : Results.StatusCode(500);
+        });
 
-                //return success ? Results.Ok("Word added successfully.") : Results.StatusCode(500);
 
-            });
-
-        }
-        
-        
         app.MapPost("/validate-words", async (HttpContext context) =>
         {
             var requestBody = await context.Request.ReadFromJsonAsync<WordValidationRequest>();
@@ -212,7 +195,6 @@ class Program
                     invalidWords.Add(word);
                 }
             }
-
             return Results.Ok(new { valid = invalidWords.Count == 0, invalidWords });
         });
 
@@ -237,7 +219,6 @@ class Program
             return success ? Results.Ok(game) : Results.StatusCode(500);
         });
 
-
         
         // Endpoint för att hämta spelinställningar
         app.MapGet("/get-game-settings", async (HttpContext context) =>
@@ -253,8 +234,6 @@ class Program
                 return Results.BadRequest("Ogiltigt spel-ID.");
             }
         });
-
-        
         
         
         app.Run(); //startar servern 

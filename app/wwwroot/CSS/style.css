@@ -5,38 +5,51 @@ body{
     padding: 0;
     margin: 0;
 }
+
+
 header{
     display: flex;
     justify-content: center;
     background-color: black;
 }
+
+
 main{
     display: flex;
     justify-content: center;
     align-content: center;
     margin-top: 3%;
 }
+
+
 header>h1{
     color: white;
 }
+
+
 form{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-/* Stil för knappen */
+
+
 #disconnect {
     margin: 10px;
     padding: 10px 20px;
-    background-color: #FFCC00; /* Gul färg */
+    background-color: #FFCC00; 
     border: none;
     color: #FFFFFF;
     cursor: pointer;
 }
-/* Stil för knappen vid hover */
+
+
+
 #disconnect:hover {
-    background-color: #FF9900; /* Mörkare gul färg */
+    background-color: #FF9900; 
 }
+
+
 .playerNameDiv, .gamecodeDiv {
     display: flex;
     align-items: center;
@@ -44,12 +57,18 @@ form{
     gap: 10px;
     justify-content: center;
 }
+
+
 #SessionForm input{
     width: 300px;
 }
+
+
 .playerNameDiv button{
     margin-left: 10px;
 }
+
+
 form .buttonDiv{
     display: flex;
     justify-content: center;
@@ -57,6 +76,8 @@ form .buttonDiv{
     gap: 100px;
     padding: 10px 20px;
 }
+
+
 form button{
     background-color: #7fefbd;
     border-radius: 10%;
@@ -66,6 +87,8 @@ form button{
     width: 150px;
     height: 35px;
 }
+
+
 input[type="text"] {
     display: block;
     margin: 10px 0;
@@ -73,30 +96,28 @@ input[type="text"] {
     font-size: 12px;
 }
 
-/* Stil för knappen */
+
 #forfeitRound {
     margin: 10px;
     padding: 10px 20px;
-    background-color: #FF6347; /* Tomatfärg */
+    background-color: #FF6347; 
     border: none;
     color: #FFFFFF;
     cursor: pointer;
 }
 
-/* Stil för knappen vid hover */
+
 #forfeitRound:hover {
-    background-color: #FF4500; /* OrangeRed-färg */
+    background-color: #FF4500; 
 }
 
-
-
-/* Create or connect to lobby button container */
 
 .button-container {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
+
 
 button {
     background-color: #7fefbd;
@@ -107,6 +128,7 @@ button {
     width: 200px;
     margin: 10px;
 }
+
 
 button:hover {
     background-color: #5fc89d;

@@ -3,12 +3,14 @@ document.getElementById('connectLobbyForm').addEventListener('submit', async fun
 
     const gameCode = document.getElementById('gameCode').value;
 
+    
     const response = await fetch('/connect-lobby', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ GameCode: gameCode })
     });
 
+    
     const result = await response.json();
     if (response.ok) {
         alert('Connected to the lobby!');

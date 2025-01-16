@@ -34,31 +34,10 @@ h1{
     margin-top: 5px;
     font-family: Inter;
 }
+
 h2{
     position: absolute;
     font-family: Inter;
     font-size: 14px;
     margin: auto;
-}
-
-.box{
-    width: 55px;
-    height: 55px;
-    border: solid;
-    position: absolute;
-    top: 300px;
-}
-
-.red{
-    left: 665px;
-    border-color: red;
-}
-
-.green{
-    left: 600px;
-    border-color: green;
-}
-.blue{
-    left: 730px;
-    border-color: blue;
 }

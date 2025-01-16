@@ -82,6 +82,7 @@ public class Actions
         }
         return (false, null);
     }
+    
     public async Task<Users?> AddPlayer(string clientId, string name)
     {
         int rows = 0;
@@ -113,8 +114,6 @@ public class Actions
     }
     
     
-
-    // Task: Disconnect from the game
     public async Task<bool> Disconnect(int gameId, string playerId)
     {
         await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
@@ -150,7 +149,7 @@ public class Actions
         return false;
     }
     
-        // Task: Forfeit a round
+    
     public async Task<bool> ForfeitRound(int gameId, string playerId)
     {
         await using var cmd = _db.CreateCommand("SELECT state, player_1, player_2 FROM games WHERE game_id = $1");
@@ -176,10 +175,8 @@ public class Actions
 
         return false;
     }
-
     
-
-    // Task: Get the game status
+    
     public async Task<string> GetGameStatus(int gameId)
     {
         await using var cmd = _db.CreateCommand("SELECT state FROM games WHERE game_id = $1");
@@ -196,7 +193,6 @@ public class Actions
 
         
     public async Task<string> GetWord(int length)
-
     {
 
     await using var cmd = _db.CreateCommand("SELECT word FROM dictionary WHERE LENGTH(word) = $1 ORDER BY RANDOM() LIMIT 1"); // fast if word exists in table query 
@@ -238,10 +234,6 @@ public class Actions
 
         return null;
     }
-
-    
-        
-        
 }
 
 

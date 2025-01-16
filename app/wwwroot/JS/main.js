@@ -52,11 +52,12 @@ $('#SessionForm').on("click", "button", async function(event) {
     console.log("data", data);
 });
 
+
 $(document).ready(function() {
-    // Variabler för att lagra spelets ID och spelarens ID
     let gameId;
     let playerId;
 
+    
     // Funktion för att hämta spelets status från servern
     async function getGameStatus() {
         let response = await fetch(`/game-status?gameId=${gameId}`);
@@ -69,6 +70,7 @@ $(document).ready(function() {
         }
     }
 
+    
     // Funktion för att initiera spelet och sätta spelets ID och spelarens ID
     async function initGame() {
         // Få spelets ID och spelarens ID automatiskt (t.ex. från cookies)
@@ -79,6 +81,7 @@ $(document).ready(function() {
             return;
         }
 
+        
         const gameState = await getGameStatus();
         if (gameState === "active") {
             $('#forfeitRound').show(); // Visa knappen om spelets status är "active"
@@ -89,6 +92,7 @@ $(document).ready(function() {
         }
     }
 
+    
     // Funktion för att hämta cookie-värde
     function getCookie(name) {
         let value = "; " + document.cookie;
@@ -96,9 +100,11 @@ $(document).ready(function() {
         if (parts.length === 2) return parts.pop().split(";").shift();
     }
 
+    
     // Kör initiering när sidan laddas
     initGame();
 
+    
     // Hantera klickhändelse för att ge upp rundan
     $('#forfeitRound').on('click', async function() {
         let response = await fetch(`/forfeit-round?gameId=${gameId}`, { method: 'POST' });
@@ -110,7 +116,7 @@ $(document).ready(function() {
         }
     });
 
-    // Hantera klickhändelse för att koppla från spelet
+    
     $('#disconnect').on('click', async function() {
         let response = await fetch(`/disconnect?gameId=${gameId}`, { method: 'POST' });
         if (response.ok) {
@@ -128,4 +134,3 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = '/CreateGameMenu.html'; // Replace with your target URL
     });
 });
-

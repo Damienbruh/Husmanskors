@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="CSS/style.css">
+    <script src="JS/main.js" defer></script>
     <title>Husmanskors</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
@@ -14,13 +14,7 @@
         <h1>Welcome to HusmansKors</h1>
     </header>
     <main>
-        <div class="button-container"> 
-            <a href="lobbyMenu.html"> 
-                <button>Create or Connect to Lobby</button> 
-            </a> 
-        </div>
         <div class="playername">
-            <!--joinGame-->
             <form id="SessionForm">
                 <div class="playerNameDiv">
                     <label for="playerName"></label>
@@ -34,18 +28,12 @@
                     <button type="button" id="ChangeName">Ändra Namn</button>
                 </div>
                 <div class="buttonDiv">
-                    <!--<button type="button" id="StartSession">Skapa Spel</button> -- DAVIDS GAMLA-->
                     <button type="button" id="ConnectSessionViaCode">Gå med Spel</button>
                     <button type="button" id="connectOptions">Skapa Spel</button>
                 </div>
             </form>
         </div>
     </main>
-    <a href="game.html"><button>game test</button></a>
-    <!-- Task: Disconnect from the game -->
-    <button id="disconnect" style="display: none;">Koppla från spelet</button>
-    <!-- Task: Forfeit a round -->
-    <button id="forfeitRound" style="display: none;">Ge upp rundan</button>
 </body>
 
 </html>

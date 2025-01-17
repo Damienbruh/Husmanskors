@@ -39,7 +39,7 @@ class Program
                     SameSite = SameSiteMode.Strict,
                     MaxAge = TimeSpan.FromDays(365) // Cookie expiration
                 });
-                context.Items[clientIdCookieName] = clientId;
+                context.Items[clientIdCookieName] = clientId; //append cookie to current request
                 await actions.AddIdToDb(clientId);
                 Console.WriteLine($"New client ID generated and set: {clientId}");
             }
@@ -71,18 +71,17 @@ class Program
                 return Results.BadRequest("not a valid request.");
             } 
             
-            Console.WriteLine($"ConnectType: {requestBody.connectType}");
-            Console.WriteLine($"Game Code: {requestBody.GameCode}");
-            Console.WriteLine($"Round Time:: {requestBody.Settings.roundTimeInput} secods.");
-            Console.WriteLine($"Number of Rounds: {requestBody.Settings.numberOfRoundsInput}");
-            Console.WriteLine($"Extra Points: {requestBody.Settings.extraPointsCheckbox}");
-            
             Game game;
             bool success;
             
             
             if (requestBody.connectType == "StartSession")
             {
+                Console.WriteLine($"ConnectType: {requestBody.connectType}");
+                Console.WriteLine($"Game Code: {requestBody.GameCode}");
+                Console.WriteLine($"Round Time:: {requestBody.Settings.roundTimeInput} secods.");
+                Console.WriteLine($"Number of Rounds: {requestBody.Settings.numberOfRoundsInput}");
+                Console.WriteLine($"Extra Points: {requestBody.Settings.extraPointsCheckbox}");
                 (success, game) = await actions.NewSession(context.Request.Cookies["ClientId"]);
             } 
             else if (requestBody.connectType == "ConnectSessionViaCode")
